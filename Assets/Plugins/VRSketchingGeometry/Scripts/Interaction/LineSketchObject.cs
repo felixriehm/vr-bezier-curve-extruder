@@ -56,7 +56,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
         public float minimumControlPointDistance = 1f;
 
         protected float lineDiameter = .2f;
-        private int InterpolationSteps = 20;
+        protected int InterpolationSteps = 20;
 
         protected override void Awake()
         {

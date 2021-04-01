@@ -1,4 +1,10 @@
-Library
-UserSettings
-Logs
+Library/
+UserSettings/
+Logs/
 Packages/packages-lock.json
+Temp/
+.idea/
+obj/
+vr-bezier-surface-sketching-tool.sln
+Assembly-CSharp.csproj
+VRSketchingGeometry.csproj

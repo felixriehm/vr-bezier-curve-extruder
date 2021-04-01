@@ -42,7 +42,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
             SetMesh(patchMesh);
         }
 
-        private void SetMesh(Mesh mesh) {
+        protected void SetMesh(Mesh mesh) {
             Mesh oldMesh = this.GetComponent<MeshFilter>().sharedMesh;
             Destroy(oldMesh);
             this.GetComponent<MeshFilter>().sharedMesh = mesh;
