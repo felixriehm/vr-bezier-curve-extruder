@@ -15,10 +15,12 @@ namespace VRSketchingGeometry
         public Material StandardSketchMaterial;
         public Material TwoSidedSketchMaterial;
         public GameObject LineSketchObjectPrefab;
+        public GameObject BezierCurveSketchObjectPrefab;
         public GameObject LinearInterpolationLineSketchObjectPrefab;
         public GameObject SketchObjectGroupPrefab;
         public GameObject SketchObjectSelectionPrefab;
         public GameObject PatchSketchObjectPrefab;
+        public GameObject BezierPatchSketchObjectPrefab;
         public GameObject RibbonSketchObjectPrefab;
 
         /// <summary>

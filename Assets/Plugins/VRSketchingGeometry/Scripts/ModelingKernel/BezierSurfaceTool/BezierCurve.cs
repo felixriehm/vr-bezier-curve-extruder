@@ -72,7 +72,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
             
             ControlPoints.RemoveAt(index);
             
-            if (ControlPoints.Count == 2 || ControlPoints.Count < 2)
+            if (ControlPoints.Count == 1)
             {
                 return new SplineModificationInfo(0, InterpolatedPoints.Count, 0);
             }
@@ -104,11 +104,11 @@ namespace VRSketchingGeometry.BezierSurfaceTool
             
             ControlPoints.Insert(index, controlPoint);
 
-            if (ControlPoints.Count < 3)
+            if (ControlPoints.Count < 2)
             {
                 return new SplineModificationInfo(0, 0, 0);
             }
-            if (ControlPoints.Count == 3)
+            if (ControlPoints.Count == 2)
             {
                 InterpolateSpline();
                 return new SplineModificationInfo(0, 0, InterpolatedPoints.Count);
@@ -135,7 +135,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         private void InterpolateSpline()
         {
             InterpolatedPoints.Clear();
-            if (ControlPoints.Count < 3)
+            if (ControlPoints.Count < 2)
             {
                 Debug.LogWarning("BezierCurve: Not enough control points! Minimum is 2.");
                 return;

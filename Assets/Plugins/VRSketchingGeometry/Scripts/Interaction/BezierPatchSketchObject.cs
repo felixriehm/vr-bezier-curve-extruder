@@ -22,10 +22,10 @@ namespace VRSketchingGeometry.SketchObjectManagement
         /// <param name="controlPoints"></param>
         /// <param name="width">Number of control points in x direction</param>
         /// <param name="height">Number of control points in y direction</param>
-        private void UpdatePatchMesh(List<Vector3> controlPoints, int width, int height)
+        protected override void UpdatePatchMesh(List<Vector3> controlPoints, int width, int height)
         {
-            if (height < 3 || width < 3 || controlPoints.Count / width != height) {
-                Debug.LogWarning("The amount of control points is invalid! \n There must at least be 3x3 control points. Amount of control ponits must be a multiple of width.");
+            if (height < 2 || width < 2 || controlPoints.Count / width != height) {
+                Debug.LogWarning("The amount of control points is invalid! \n There must at least be 2x2 control points. Amount of control ponits must be a multiple of width.");
                 SetMesh(null);
                 return;
             }

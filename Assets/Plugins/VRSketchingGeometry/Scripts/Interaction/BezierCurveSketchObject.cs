@@ -39,7 +39,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
         /// A higher number makes the line smoother.
         /// </summary>
         /// <param name="steps"></param>
-        public virtual void SetInterpolationSteps(int steps) {
+        public override void SetInterpolationSteps(int steps) {
             InterpolationSteps = steps;
             List<Vector3> controlPoints = this.GetControlPoints();
             this.SplineMesh.GetCrossSectionShape(out List<Vector3> CurrentCrossSectionShape, out List<Vector3> CurrentCrossSectionNormals);
