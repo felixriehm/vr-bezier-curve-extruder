@@ -16,6 +16,8 @@ MonoBehaviour:
   TwoSidedSketchMaterial: {fileID: 2100000, guid: f7174271d3120fa49b5da504d0a40158, type: 2}
   LineSketchObjectPrefab: {fileID: 1524500983091648832, guid: 7ee00a79cbb48fc44b9ada2a7fac529e, type: 3}
   BezierCurveSketchObjectPrefab: {fileID: 768797871507807939, guid: df6534259a5035540b2e1e64b0f18e4c, type: 3}
+  BezierSurfaceToolIndicatorPrefab: {fileID: 4452081667796100628, guid: aca13ba175c081c45a06b42b367b474d, type: 3}
+  BezierSurfaceToolPrefab: {fileID: 7389712191255417032, guid: bec4adea90290b1419e324c36bb44c87, type: 3}
   LinearInterpolationLineSketchObjectPrefab: {fileID: 1524500983091648832, guid: f8d9aff7463b79649a9d76ebc53f39a7, type: 3}
   SketchObjectGroupPrefab: {fileID: 3810263403817002055, guid: 0973b0f6962b00d479e700076fc02bfd, type: 3}
   SketchObjectSelectionPrefab: {fileID: 1565193450362279123, guid: 80263d6ccfae2d946a931e6be3d3e021, type: 3}

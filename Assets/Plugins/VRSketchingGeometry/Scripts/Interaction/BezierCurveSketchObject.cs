@@ -43,7 +43,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
             InterpolationSteps = steps;
             List<Vector3> controlPoints = this.GetControlPoints();
             this.SplineMesh.GetCrossSectionShape(out List<Vector3> CurrentCrossSectionShape, out List<Vector3> CurrentCrossSectionNormals);
-            SplineMesh = new SplineMesh(new KochanekBartelsSpline(steps), this.lineDiameter * Vector3.one);
+            SplineMesh = new SplineMesh(new BezierCurve(steps), this.lineDiameter * Vector3.one);
             this.SetLineCrossSection(CurrentCrossSectionShape, CurrentCrossSectionNormals, this.lineDiameter);
             if (controlPoints.Count != 0) {
                 this.SetControlPointsLocalSpace(controlPoints);
