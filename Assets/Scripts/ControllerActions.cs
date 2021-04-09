@@ -1,13 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using Valve.VR;
-using Valve.VR.InteractionSystem;
 using VRSketchingGeometry;
 using VRSketchingGeometry.BezierSurfaceTool;
-using VRSketchingGeometry.SketchObjectManagement;
 
 public class ControllerActions : MonoBehaviour
 {
@@ -21,92 +15,68 @@ public class ControllerActions : MonoBehaviour
     public SteamVR_ActionSet bezierSurfaceToolActionSet;
     public DefaultReferences Defaults;
     private BezierSurfaceTool bezierSurfaceTool;
-    private bool bezierSurfaceToolInUse;
-    private bool bezierSurfaceToolIsDrawing;
 
     private void Start()
     {
         bezierSurfaceTool = Instantiate(Defaults.BezierSurfaceToolPrefab).GetComponent<BezierSurfaceTool>();
+        
+        bezierSurfaceToolAction.AddOnStateDownListener(OnBezierSurfaceToolActionStateDown, leftHandType);
+        bezierSurfaceToolAction.AddOnStateDownListener(OnBezierSurfaceToolActionStateDown, rightHandType);
+        
+        drawBezierSurface.AddOnStateDownListener(OnDrawBezierSurfaceStateDownAction, leftHandType);
+        drawBezierSurface.AddOnStateDownListener(OnDrawBezierSurfaceStateDownAction, rightHandType);
+        
+        drawBezierSurface.AddOnStateUpListener(OnDrawBezierSurfaceStateUpAction, leftHandType);
+        drawBezierSurface.AddOnStateUpListener(OnDrawBezierSurfaceStateUpAction, rightHandType);
+        
+        bezierCurveIntensity.AddOnChangeListener(OnBezierCurveIntensityChangeAction, leftHandType);
+        bezierCurveIntensity.AddOnChangeListener(OnBezierCurveIntensityChangeAction, rightHandType);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnBezierCurveIntensityChangeAction(SteamVR_Action_Vector2 fromaction, SteamVR_Input_Sources fromsource, Vector2 axis, Vector2 delta)
     {
-        if (bezierSurfaceToolAction.GetStateDown(leftHandType) ||bezierSurfaceToolAction.GetStateDown(rightHandType))
+        BezierSurfaceTool.BezierSurfaceToolController controller =  fromsource == leftHandType ? 
+            BezierSurfaceTool.BezierSurfaceToolController.Left : BezierSurfaceTool.BezierSurfaceToolController.Right;
+        
+        if (axis.y > 0.9)
         {
-            bezierSurfaceToolInUse = !bezierSurfaceToolInUse;
-            if (bezierSurfaceToolInUse)
-            {
-                //Debug.Log("BezierSurfaceTool activated");
-                bezierSurfaceToolInUse = true;
-                
-                bezierSurfaceToolActionSet.Activate();
-
-                bezierSurfaceTool.InitInitialBezierCurve(leftControllerOrigin, rightControllerOrigin);
-            }
-            else
-            {
-                //Debug.Log("BezierSurfaceTool deactivated");
-                bezierSurfaceToolInUse = false;
-                bezierSurfaceToolActionSet.Deactivate();
-                bezierSurfaceTool.DestroyBezierCurve();
-            }
-            
+            bezierSurfaceTool.ChangeCurveIntensity(controller, 0.05f);
         }
-
-        if (bezierSurfaceToolInUse)
+        if (axis.y < -0.9)
         {
-            if (drawBezierSurface.GetState(leftHandType) && drawBezierSurface.GetStateDown(rightHandType) || 
-                drawBezierSurface.GetStateDown(leftHandType) && drawBezierSurface.GetState(rightHandType))
-            {
-                //Debug.Log("BezierSurfaceTool: drawing");
-                bezierSurfaceTool.DisableBezierCurve();
-                bezierSurfaceToolIsDrawing = true;
-            }
-            
-            if (drawBezierSurface.GetStateUp(leftHandType) || drawBezierSurface.GetStateUp(rightHandType))
-            {
-                //Debug.Log("BezierSurfaceTool: not drawing");
-                bezierSurfaceTool.EnableBezierCurve();
-                bezierSurfaceToolIsDrawing = false;
-            }
-            
-            if (!bezierSurfaceToolIsDrawing)
-            {
-                // draw bezier curve on each update
-                bezierSurfaceTool.redrawInitialBezierCurve();
+            bezierSurfaceTool.ChangeCurveIntensity(controller, -0.05f);
+        }
+    }
 
-                if (bezierCurveIntensity.GetAxis(leftHandType).y > 0.9)
-                {
-                    // increase vector length by 0.1
-                    //Debug.Log("BezierSurfaceTool: left curve intensity increased");
-                    //Debug.Log(bezierCurveIntensity.GetAxis(leftHandType));
-                }
-                if (bezierCurveIntensity.GetAxis(leftHandType).y < -0.9)
-                {
-                    // decrease vector length by 0.1
-                    //Debug.Log("BezierSurfaceTool: left curve intensity decreased");
-                    //Debug.Log(bezierCurveIntensity.GetAxis(leftHandType));
-                }
+    private void OnDrawBezierSurfaceStateDownAction(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
+    {
+        if (drawBezierSurface.GetState(leftHandType) && fromsource == rightHandType || 
+            fromsource == leftHandType && drawBezierSurface.GetState(rightHandType))
+        {
+            //Debug.Log("BezierSurfaceTool: drawing");
+            bezierSurfaceTool.StartDrawSurface();
+        }
+    }
+    
+    private void OnDrawBezierSurfaceStateUpAction(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
+    {
+        //Debug.Log("BezierSurfaceTool: not drawing");
+        bezierSurfaceTool.StopDrawSurface();
+    }
 
-                if (bezierCurveIntensity.GetAxis(rightHandType).y > 0.9)
-                {
-                    // increase vector length by 0.1
-                    //Debug.Log("BezierSurfaceTool: right curve intensity");
-                    //Debug.Log(bezierCurveIntensity.GetAxis(rightHandType));
-                }
-
-                if (bezierCurveIntensity.GetAxis(rightHandType).y < -0.9)
-                {
-                    // decrease vector length by 0.1
-                    //Debug.Log("BezierSurfaceTool: right curve detensity");
-                    //Debug.Log(bezierCurveIntensity.GetAxis(rightHandType));
-                }
-            }
-            else
-            {
-                // draw bezierfurface on each update
-            }
+    private void OnBezierSurfaceToolActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
+    {
+        if (bezierSurfaceTool.CurrentBezierSurfaceToolState == BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted)
+        {
+            //Debug.Log("BezierSurfaceTool activated");
+            bezierSurfaceToolActionSet.Activate();
+            bezierSurfaceTool.StartTool(leftControllerOrigin, rightControllerOrigin);
+        }
+        else
+        {
+            //Debug.Log("BezierSurfaceTool deactivated");
+            bezierSurfaceToolActionSet.Deactivate();
+            bezierSurfaceTool.ExitTool();
         }
     }
 }
