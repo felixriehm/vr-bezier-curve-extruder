@@ -17,8 +17,8 @@ public class test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DrawLine();
-        DrawSurface();
+        //DrawLine();
+        //DrawSurface();
     }
 
     void DrawLine()
