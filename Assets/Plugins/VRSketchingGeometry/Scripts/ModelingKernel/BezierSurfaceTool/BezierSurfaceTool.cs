@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace VRSketchingGeometry.BezierSurfaceTool
 {
+    // TODO: wie BezierSurfaces speichern und löschen
     public class BezierSurfaceTool : MonoBehaviour
     {
         [Header("Left Controller")]
@@ -22,9 +23,17 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         public Vector3 bezierCurveRightStartRotation = new Vector3(0f,0f,0f);
         [Range(0, 10)]
         public float bezierCurveRightIntensity = 1f;
-        [Header("Others")]
-        public DefaultReferences Defaults;
+        [Header("Bezier Surface")]
+        public GameObject BezierPatchSketchObjectPrefab;
+        public GameObject BezierSurfaceSketchObjectPrefab;
+        [Range(0.002f, 4)]
+        public float BezierPatchMinDistance = 0.05f;
+        [Header("Bezier Curve")]
+        public GameObject BezierCurveSketchObjectPrefab;
+        public GameObject BezierSurfaceToolIndicatorPrefab;
         public bool showIndicators = false;
+        
+        
         public BezierSurfaceToolState CurrentBezierSurfaceToolState { get; private set; }
 
         public enum BezierSurfaceToolController
@@ -41,18 +50,15 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         }
         
         private BezierCurveSketchObject BezierCurveSketchObject;
-        private GameObject BezierCurveSketchObjectPrefab;
         private GameObject[] controllerHandles = new GameObject[2];
         private GameObject[] cpHandles = new GameObject[4];
         private BezierPatchSketchObject temporaryBezierPatch;
         private Vector3[] prevCpHandles;
-        private List<BezierSurfaceSketchObject> bezierSurfaces;
         private BezierSurfaceSketchObject currentBezierSurface;
         
         public BezierSurfaceTool()
         {
             CurrentBezierSurfaceToolState = BezierSurfaceToolState.ToolNotStarted;
-            bezierSurfaces = new List<BezierSurfaceSketchObject>();
         }
 
         public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
@@ -84,8 +90,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
                 for (int i = 0; i < controllerOrigins.Length; i++)
                 {
                     // init controller handle
-                    Destroy(controllerHandles[i]);
-                    controllerHandles[i] = Instantiate(Defaults.BezierSurfaceToolIndicatorPrefab);
+                    controllerHandles[i] = Instantiate(BezierSurfaceToolIndicatorPrefab);
                     controllerHandles[i].name = "ControllerHandle" + i;
                     controllerHandles[i].transform.SetParent(controllerOrigins[i]);
                     // init indices for the arrays previously created
@@ -93,11 +98,9 @@ namespace VRSketchingGeometry.BezierSurfaceTool
                     int secondCpHandle = i * 2 + 1;
                     
                     // init first and second cp handle
-                    Destroy(cpHandles[firstCpHandle]);
-                    Destroy(cpHandles[secondCpHandle]);
-                    cpHandles[firstCpHandle] = Instantiate(Defaults.BezierSurfaceToolIndicatorPrefab);
+                    cpHandles[firstCpHandle] = Instantiate(BezierSurfaceToolIndicatorPrefab);
                     cpHandles[firstCpHandle].name = "CpHandle" + firstCpHandle;
-                    cpHandles[secondCpHandle] = Instantiate(Defaults.BezierSurfaceToolIndicatorPrefab);
+                    cpHandles[secondCpHandle] = Instantiate(BezierSurfaceToolIndicatorPrefab);
                     cpHandles[secondCpHandle].name = "CpHandle" + secondCpHandle;
                     cpHandles[firstCpHandle].transform.SetParent(controllerHandles[i].transform);
                     cpHandles[secondCpHandle].transform.SetParent(cpHandles[firstCpHandle].transform);
@@ -117,9 +120,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
                 }
 
                 // init Bezier curve
-                Destroy(BezierCurveSketchObjectPrefab);
-                BezierCurveSketchObjectPrefab = Instantiate(Defaults.BezierCurveSketchObjectPrefab);
-                BezierCurveSketchObject = BezierCurveSketchObjectPrefab.GetComponent<BezierCurveSketchObject>();
+                BezierCurveSketchObject = Instantiate(BezierCurveSketchObjectPrefab).GetComponent<BezierCurveSketchObject>();
                 BezierCurveSketchObject.SetLineDiameter(diameter);
                 BezierCurveSketchObject.SetInterpolationSteps(steps);
 
@@ -159,7 +160,12 @@ namespace VRSketchingGeometry.BezierSurfaceTool
                 
                 if (IsTmpBezierPatchMinDistMet())
                 {
+                    // Add temporary patch to surface by combining meshes.
+                    // There is no check for 'AllCounterPartVerticesAreEqual()' because 'BezierPatchMinDistance' ensures
+                    // that this can no be the case.
                     currentBezierSurface.AddPatch(temporaryBezierPatch);
+                    
+                    // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
                     for (int i = 0; i < cpHandles.Length; i++)
                     {
                         prevCpHandles[i] = cpHandles[i].transform.position;
@@ -182,8 +188,13 @@ namespace VRSketchingGeometry.BezierSurfaceTool
                     Destroy(cpHandles[i]);
                 }
             
-                Destroy(BezierCurveSketchObjectPrefab);
-            
+                Destroy(BezierCurveSketchObject.gameObject);
+                // if you exit the tool while drawing, 'StopDrawSurface()' does not destroy temporaryBezierPatch
+                if (temporaryBezierPatch != null)
+                {
+                    Destroy(temporaryBezierPatch.gameObject);
+                }
+                
                 CurrentBezierSurfaceToolState = BezierSurfaceToolState.ToolNotStarted;
             }
             else
@@ -214,58 +225,49 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         
         public void StopDrawSurface()
         {
-            if (BezierCurveSketchObjectPrefab && CurrentBezierSurfaceToolState == BezierSurfaceToolState.DrawingSurface)
+            if (CurrentBezierSurfaceToolState == BezierSurfaceToolState.DrawingSurface)
             {
-                currentBezierSurface.AddPatch(temporaryBezierPatch);
+                if (!AllCounterpartVerticesAreEqual())
+                {
+                    currentBezierSurface.AddPatch(temporaryBezierPatch);
+                }
                 Destroy(temporaryBezierPatch.gameObject);
-                
-                bezierSurfaces.Add(currentBezierSurface);
 
-                BezierCurveSketchObjectPrefab.SetActive(true);
+                BezierCurveSketchObject.gameObject.SetActive(true);
                 CurrentBezierSurfaceToolState = BezierSurfaceToolState.DrawingCurve;
             }
             else
             {
-                Debug.Log("Can not execute method 'StopDrawSurface()': Tool must be drawing surface or BezierCurveSketchObjectPrefab was not initiated");
+                Debug.Log("Can not execute method 'StopDrawSurface()': Tool must be drawing surface.");
             }
         }
         
         public void StartDrawSurface()
         {
-            if (BezierCurveSketchObjectPrefab && CurrentBezierSurfaceToolState == BezierSurfaceToolState.DrawingCurve)
+            if (CurrentBezierSurfaceToolState == BezierSurfaceToolState.DrawingCurve)
             {
-                currentBezierSurface = Instantiate(Defaults.BezierSurfaceSketchObjectPrefab).GetComponent<BezierSurfaceSketchObject>();
+                // init bezier surface so it can be used later to continuously add temporary bezier patches
+                currentBezierSurface = Instantiate(BezierSurfaceSketchObjectPrefab).GetComponent<BezierSurfaceSketchObject>();
+                
+                // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
                 prevCpHandles = new Vector3[4];
                 for (int i = 0; i < cpHandles.Length; i++)
                 {
                     prevCpHandles[i] = cpHandles[i].transform.position;
                 }
                 
-                // TODO: temporaryBezierPatch und bezierPatches werden immer neu erstellt. Muss mit Desotry aufgeräumt werden
-                // und in BezierSurfaceSKetchObject gepseichert werden.
-                if (temporaryBezierPatch != null)
-                {
-                    Destroy(temporaryBezierPatch.gameObject);
-                }
-                
-                temporaryBezierPatch = Instantiate(Defaults.BezierPatchSketchObjectPrefab).GetComponent<BezierPatchSketchObject>();
-                if (bezierSurfaces != null)
-                {
-                    foreach (var surface in bezierSurfaces)
-                    {
-                        if (surface != null)
-                        {
-                            Destroy(surface.gameObject);
-                        }
-                    }
-                }
+                // init temporary bezier patch so it can be continuously be drawn later and added to the bezier surface
+                temporaryBezierPatch = Instantiate(BezierPatchSketchObjectPrefab).GetComponent<BezierPatchSketchObject>();
 
-                BezierCurveSketchObjectPrefab.SetActive(false);
+                // deactivate bezier curve
+                BezierCurveSketchObject.gameObject.SetActive(false);
+                
+                // set state to 'drawing surface'
                 CurrentBezierSurfaceToolState = BezierSurfaceToolState.DrawingSurface;
             }
             else
             {
-                Debug.Log("Can not execute method 'StartDrawSurface()': Tool must be drawing curve or BezierCurveSketchObjectPrefab was not initiated");
+                Debug.Log("Can not execute method 'StartDrawSurface()': Tool must be drawing curve");
             }
         }
 
@@ -273,7 +275,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         {
             for (int i = 0; i < prevCpHandles.Length; i++)
             {
-                if ((prevCpHandles[i] - cpHandles[i].transform.position).magnitude > 0.05f)
+                if ((prevCpHandles[i] - cpHandles[i].transform.position).magnitude > BezierPatchMinDistance)
                 {
                     return true;
                 }
@@ -284,10 +286,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
 
         private void RedrawTemporaryBezierPatch()
         {
-            if(prevCpHandles[0] == cpHandles[0].transform.position &&
-               prevCpHandles[1] == cpHandles[1].transform.position &&
-               prevCpHandles[2] == cpHandles[2].transform.position &&
-               prevCpHandles[3] == cpHandles[3].transform.position)
+            if(AllCounterpartVerticesAreEqual())
             {
                 // this is needed to avoid the error: "[Physics.PhysX] cleaning the mesh failed"
                 // this is happening because all Vertices overlap and that is messing up the cleaning procedures
@@ -295,6 +294,14 @@ namespace VRSketchingGeometry.BezierSurfaceTool
             }
             
             temporaryBezierPatch.SetControlPoints(GetTmpBezierPatchCps(),4);
+        }
+
+        private bool AllCounterpartVerticesAreEqual()
+        {
+            return prevCpHandles[0] == cpHandles[0].transform.position &&
+                   prevCpHandles[1] == cpHandles[1].transform.position &&
+                   prevCpHandles[2] == cpHandles[2].transform.position &&
+                   prevCpHandles[3] == cpHandles[3].transform.position;
         }
         
         private void RedrawBezierCurve()

@@ -16,9 +16,7 @@ namespace VRSketchingGeometry
         public Material TwoSidedSketchMaterial;
         public GameObject LineSketchObjectPrefab;
         public GameObject BezierCurveSketchObjectPrefab;
-        public GameObject BezierSurfaceToolIndicatorPrefab;
         public GameObject BezierSurfaceToolPrefab;
-        public GameObject BezierSurfaceSketchObjectPrefab;
         public GameObject BezierPatchSketchObjectPrefab;
         public GameObject LinearInterpolationLineSketchObjectPrefab;
         public GameObject SketchObjectGroupPrefab;
