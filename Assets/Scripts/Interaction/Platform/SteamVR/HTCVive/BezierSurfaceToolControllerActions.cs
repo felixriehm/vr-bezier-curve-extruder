@@ -3,7 +3,7 @@ using Valve.VR;
 using VRSketchingGeometry;
 using VRSketchingGeometry.BezierSurfaceTool;
 
-public class ControllerActions : MonoBehaviour
+public class BezierSurfaceToolControllerActions : MonoBehaviour
 {
     public SteamVR_Input_Sources leftHandType; 
     public SteamVR_Input_Sources rightHandType;
@@ -66,7 +66,7 @@ public class ControllerActions : MonoBehaviour
 
     private void OnBezierSurfaceToolActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
     {
-        if (bezierSurfaceTool.CurrentBezierSurfaceToolState == BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted)
+        if (bezierSurfaceTool.GetCurrentState() == BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted)
         {
             //Debug.Log("BezierSurfaceTool activated");
             bezierSurfaceToolActionSet.Activate();
