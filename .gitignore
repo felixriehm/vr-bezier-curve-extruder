@@ -1,34 +1,3 @@
-# gitignore of vr-bezier-surface-sketching-tool
-Library/
-UserSettings/
-Logs/
-Packages/packages-lock.json
-Temp/
-.idea/
-obj/
-vr-bezier-surface-sketching-tool.sln
-Assembly-CSharp.csproj
-VRSketchingGeometry.csproj
-Assets/SteamVR
-Assets/SteamVR_Input
-Assets/SteamVR_Resources
-SteamVR.csproj
-SteamVR_Actions.csproj
-SteamVR_Editor.csproj
-SteamVR_Input_Editor.csproj
-SteamVR_Windows_EditorHelper.csproj
-unityProject.vrmanifest
-Assets/SteamVR.meta
-Assets/SteamVR_Input.meta
-Assets/SteamVR_Resources.meta
-Assets/StreamingAssets.meta
-Assets/XR.meta
-Assets/StreamingAssets
-Assets/XR
-ProjectSettings/XRPackageSettings.asset
-
-# original gitignore of VRSketchingGeometry
-
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
@@ -97,3 +66,33 @@ crashlytics-build.properties
 /_site/
 /Packages/docfx.console.2.56.7/
 /log.txt
+
+
+# gitignore of vr-bezier-surface-sketching-tool
+Library/
+UserSettings/
+Logs/
+Packages/packages-lock.json
+Temp/
+.idea/
+obj/
+vr-bezier-surface-sketching-tool.sln
+Assembly-CSharp.csproj
+VRSketchingGeometry.csproj
+Assets/SteamVR
+Assets/SteamVR_Input
+Assets/SteamVR_Resources
+SteamVR.csproj
+SteamVR_Actions.csproj
+SteamVR_Editor.csproj
+SteamVR_Input_Editor.csproj
+SteamVR_Windows_EditorHelper.csproj
+unityProject.vrmanifest
+Assets/SteamVR.meta
+Assets/SteamVR_Input.meta
+Assets/SteamVR_Resources.meta
+Assets/StreamingAssets.meta
+Assets/XR.meta
+Assets/StreamingAssets
+Assets/XR
+ProjectSettings/XRPackageSettings.asset
