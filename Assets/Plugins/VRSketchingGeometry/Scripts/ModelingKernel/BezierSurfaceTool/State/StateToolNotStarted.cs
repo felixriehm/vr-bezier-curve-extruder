@@ -9,6 +9,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         internal StateToolNotStarted(BezierSurfaceTool tool, BezierSurfaceToolSettings settings, BezierSurfaceToolStateData stateData)
             : base(tool, settings, stateData)
         {
+            BezierSurfaceToolStateData.OnStateChanged.Invoke(BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted);
         }
 
         internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
@@ -41,6 +42,9 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                 BezierSurfaceToolStateData.controllerHandles[i] = Object.Instantiate<GameObject>(BezierSurfaceToolSettings.BezierSurfaceToolIndicatorPrefab);
                 BezierSurfaceToolStateData.controllerHandles[i].name = "ControllerHandle" + i;
                 BezierSurfaceToolStateData.controllerHandles[i].transform.SetParent(controllerOrigins[i]);
+                BezierSurfaceToolStateData.controllerHandles[i].transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color =
+                    new Color(0.5f, 0.5f, 0.5f);
+                
                 // init indices for the arrays previously created
                 int firstCpHandle = i * 2;
                 int secondCpHandle = i * 2 + 1;
@@ -52,6 +56,11 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                 BezierSurfaceToolStateData.cpHandles[secondCpHandle].name = "CpHandle" + secondCpHandle;
                 BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.SetParent(BezierSurfaceToolStateData.controllerHandles[i].transform);
                 BezierSurfaceToolStateData.cpHandles[secondCpHandle].transform.SetParent(BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform);
+                
+                // init supplementary cp handles
+                BezierSurfaceToolStateData.supplementaryCpHandles[i] = Object.Instantiate<GameObject>(BezierSurfaceToolSettings.BezierSurfaceToolIndicatorPrefab);
+                BezierSurfaceToolStateData.supplementaryCpHandles[i].name = "SupplementaryCpHandle" + i;
+                BezierSurfaceToolStateData.supplementaryCpHandles[i].transform.SetParent(BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform);
                     
                 // set position and rotation of controller handle
                 BezierSurfaceToolStateData.controllerHandles[i].transform.SetPositionAndRotation(
@@ -65,6 +74,9 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                 
                 // set position and rotation of second cp handle
                 BezierSurfaceToolStateData.cpHandles[secondCpHandle].transform.SetPositionAndRotation((BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.up * bezierCurveIntensity[i]) + BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.position, BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.rotation );
+                
+                // set position and rotation of supplementary cp handles
+                BezierSurfaceToolStateData.supplementaryCpHandles[i].transform.SetPositionAndRotation((BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.up * bezierCurveIntensity[i]) + BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.position, BezierSurfaceToolStateData.cpHandles[firstCpHandle].transform.rotation );
             }
 
             // init Bezier curve
@@ -72,12 +84,15 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceToolStateData.BezierCurveSketchObject.SetLineDiameter(diameter);
             BezierSurfaceToolStateData.BezierCurveSketchObject.SetInterpolationSteps(steps);
 
+            // set drawing curve strategy
+            SetDrawingCurveStrategy(BezierSurfaceTool.DrawingCurveStrategy.Simple);
+            
             // get control points for the bezier curve
             List<Vector3> controlPoints = new List<Vector3>();
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[0].transform.position);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[1].transform.position);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[3].transform.position);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[2].transform.position);
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierSurfaceToolStateData));
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierSurfaceToolStateData));
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierSurfaceToolStateData));
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierSurfaceToolStateData));
 
             // set control points of bezier curve and draw it
             BezierSurfaceToolStateData.BezierCurveSketchObject.SetControlPoints(controlPoints);

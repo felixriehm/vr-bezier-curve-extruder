@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace VRSketchingGeometry.BezierSurfaceTool.State
 {
-    internal class StateDrawingSurface : SharedCurveAndSurfaceStateActions
+    internal class StateDrawingSurface : BezierSurfaceToolState
     {
         internal StateDrawingSurface(BezierSurfaceTool tool, BezierSurfaceToolSettings settings, BezierSurfaceToolStateData stateData)
             : base(tool, settings, stateData)
         {
+            BezierSurfaceToolStateData.OnStateChanged.Invoke(BezierSurfaceTool.BezierSurfaceToolState.DrawingSurface);
         }
         
         internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
@@ -46,7 +47,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                 // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
                 for (int i = 0; i < BezierSurfaceToolStateData.cpHandles.Length; i++)
                 {
-                    BezierSurfaceToolStateData.prevCpHandles[i] = BezierSurfaceToolStateData.cpHandles[i].transform.position;
+                    BezierSurfaceToolStateData.prevCpHandles[i] = BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(i, BezierSurfaceToolStateData);
                 }
             }
         }
@@ -72,7 +73,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         {
             for (int i = 0; i < BezierSurfaceToolStateData.prevCpHandles.Length; i++)
             {
-                if ((BezierSurfaceToolStateData.prevCpHandles[i] - BezierSurfaceToolStateData.cpHandles[i].transform.position).magnitude > BezierSurfaceToolSettings.BezierPatchMinDistance)
+                if ((BezierSurfaceToolStateData.prevCpHandles[i] - BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(i, BezierSurfaceToolStateData)).magnitude > BezierSurfaceToolSettings.BezierPatchMinDistance)
                 {
                     return true;
                 }
@@ -83,10 +84,10 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         
         private bool AllCounterpartVerticesAreEqual()
         {
-            return BezierSurfaceToolStateData.prevCpHandles[0] == BezierSurfaceToolStateData.cpHandles[0].transform.position &&
-                   BezierSurfaceToolStateData.prevCpHandles[1] == BezierSurfaceToolStateData.cpHandles[1].transform.position &&
-                   BezierSurfaceToolStateData.prevCpHandles[2] == BezierSurfaceToolStateData.cpHandles[2].transform.position &&
-                   BezierSurfaceToolStateData.prevCpHandles[3] == BezierSurfaceToolStateData.cpHandles[3].transform.position;
+            return BezierSurfaceToolStateData.prevCpHandles[0] == BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierSurfaceToolStateData) &&
+                   BezierSurfaceToolStateData.prevCpHandles[1] == BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierSurfaceToolStateData) &&
+                   BezierSurfaceToolStateData.prevCpHandles[2] == BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierSurfaceToolStateData) &&
+                   BezierSurfaceToolStateData.prevCpHandles[3] == BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierSurfaceToolStateData);
         }
         
         private List<Vector3> GetTmpBezierPatchCps()
@@ -96,11 +97,48 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             controlPoints.Add(BezierSurfaceToolStateData.prevCpHandles[1]);
             controlPoints.Add(BezierSurfaceToolStateData.prevCpHandles[3]);
             controlPoints.Add(BezierSurfaceToolStateData.prevCpHandles[2]);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[0].transform.position);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[1].transform.position);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[3].transform.position);
-            controlPoints.Add(BezierSurfaceToolStateData.cpHandles[2].transform.position);
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierSurfaceToolStateData));
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierSurfaceToolStateData));
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierSurfaceToolStateData));
+            controlPoints.Add(BezierSurfaceToolStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierSurfaceToolStateData));
             return controlPoints;
+        }
+        
+        internal override void ExitTool()
+        {
+            for (int i = 0; i < BezierSurfaceToolStateData.controllerHandles.Length; i++)
+            {
+                Object.Destroy(BezierSurfaceToolStateData.controllerHandles[i]);
+            }
+            
+            for (int i = 0; i < BezierSurfaceToolStateData.cpHandles.Length; i++)
+            {
+                Object.Destroy(BezierSurfaceToolStateData.cpHandles[i]);
+            }
+            
+            for (int i = 0; i < BezierSurfaceToolStateData.supplementaryCpHandles.Length; i++)
+            {
+                Object.Destroy(BezierSurfaceToolStateData.supplementaryCpHandles[i]);
+            }
+            
+            Object.Destroy(BezierSurfaceToolStateData.BezierCurveSketchObject.gameObject);
+            // if you exit the tool while drawing, 'StopDrawSurface()' does not destroy temporaryBezierPatch
+            if (BezierSurfaceToolStateData.temporaryBezierPatch != null)
+            {
+                Object.Destroy(BezierSurfaceToolStateData.temporaryBezierPatch.gameObject);
+            }
+                
+            BezierSurfaceTool.CurrentBezierSurfaceToolState = new StateToolNotStarted(BezierSurfaceTool, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
+        }
+        
+        internal override void ShowIndicators(bool show)
+        {
+            ShowIndicatorsHelper(show);
+        }
+
+        internal override void ChangeCurveIntensity(BezierSurfaceTool.BezierSurfaceToolController controller, float amount)
+        {
+            Debug.Log("Can not execute method 'ChangeCurveIntensity()': Changing curve intensity while drawing a surface is not supported.");
         }
     }
 }

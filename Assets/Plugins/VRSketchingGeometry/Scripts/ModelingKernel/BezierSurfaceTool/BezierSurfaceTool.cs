@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEditorInternal;
 using VRSketchingGeometry.SketchObjectManagement;
 using UnityEngine;
+using UnityEngine.Events;
 using VRSketchingGeometry.BezierSurfaceTool.State;
+using VRSketchingGeometry.BezierSurfaceTool.Strategy;
 
 namespace VRSketchingGeometry.BezierSurfaceTool
 {
@@ -13,7 +15,6 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         public BezierSurfaceToolSettings BezierSurfaceToolSettings;
         
         internal State.BezierSurfaceToolState CurrentBezierSurfaceToolState { get; set; }
-
         
         public enum BezierSurfaceToolState
         {
@@ -26,6 +27,14 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         {
             Left,
             Right
+        }
+        
+        public enum DrawingCurveStrategy
+        {
+            Simple,
+            VectorAngle,
+            RotationAngle,
+            Distance
         }
 
         private void Awake()
@@ -64,13 +73,33 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         }
 
         public void ChangeCurveIntensity(BezierSurfaceToolController controller, float amount)
-        {
+        { 
             CurrentBezierSurfaceToolState.ChangeCurveIntensity(controller, amount);
+        }
+
+        public void SetDrawingCurveStrategy(DrawingCurveStrategy strategy)
+        {
+            CurrentBezierSurfaceToolState.SetDrawingCurveStrategy(strategy);
         }
         
         public BezierSurfaceToolState GetCurrentState()
         {
             return CurrentBezierSurfaceToolState.GetCurrentState();
+        }
+        
+        public UnityEvent<BezierSurfaceToolState> GetOnStateChangedEvent()
+        {
+            return CurrentBezierSurfaceToolState.GetOnStateChangedEvent();
+        }
+        
+        public UnityEvent<DrawingCurveStrategy> GetOnStrategyChangedEvent()
+        {
+            return CurrentBezierSurfaceToolState.GetOnStrategyChangedEvent();
+        }
+        
+        public DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
+        {
+            return CurrentBezierSurfaceToolState.GetCurrentDrawingCurveStrategy();
         }
     }
 }
