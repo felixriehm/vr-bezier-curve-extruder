@@ -12,17 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79371292d6123424d931f7f44e4376f0, type: 3}
   m_Name: DefaultReferences
   m_EditorClassIdentifier: 
-  StandardSketchMaterial: {fileID: 2100000, guid: df5e34890b5dfef40a23e7ad5019312c, type: 2}
-  TwoSidedSketchMaterial: {fileID: 2100000, guid: f7174271d3120fa49b5da504d0a40158, type: 2}
-  LineSketchObjectPrefab: {fileID: 1524500983091648832, guid: 7ee00a79cbb48fc44b9ada2a7fac529e, type: 3}
+  StandardSketchMaterial: {fileID: 2100000, guid: df5e34890b5dfef40a23e7ad5019312c,
+    type: 2}
+  TwoSidedSketchMaterial: {fileID: 2100000, guid: f7174271d3120fa49b5da504d0a40158,
+    type: 2}
+  SketchWorldPrefab: {fileID: 2880470070087909158, guid: e76a0342672e5944d88046002a7fa40b,
+    type: 3}
+  LineSketchObjectPrefab: {fileID: 1524500983091648832, guid: 7ee00a79cbb48fc44b9ada2a7fac529e,
+    type: 3}
   BezierCurveSketchObjectPrefab: {fileID: 768797871507807939, guid: df6534259a5035540b2e1e64b0f18e4c, type: 3}
   BezierSurfaceToolIndicatorPrefab: {fileID: 4452081667796100628, guid: aca13ba175c081c45a06b42b367b474d, type: 3}
   BezierSurfaceToolPrefab: {fileID: 7389712191255417032, guid: bec4adea90290b1419e324c36bb44c87, type: 3}
   BezierSurfaceSketchObjectPrefab: {fileID: 3868673884841014220, guid: eb778c2dce628bb449f741b08d7ab208, type: 3}
   BezierPatchSketchObjectPrefab: {fileID: 7370617896637790616, guid: 7f077f55428b67b41b25e370ba8a01bc, type: 3}
-  LinearInterpolationLineSketchObjectPrefab: {fileID: 1524500983091648832, guid: f8d9aff7463b79649a9d76ebc53f39a7, type: 3}
-  SketchObjectGroupPrefab: {fileID: 3810263403817002055, guid: 0973b0f6962b00d479e700076fc02bfd, type: 3}
-  SketchObjectSelectionPrefab: {fileID: 1565193450362279123, guid: 80263d6ccfae2d946a931e6be3d3e021, type: 3}
-  PatchSketchObjectPrefab: {fileID: 1583689454566765405, guid: 4d4802fdda75138449a38e9437d0afdd, type: 3}
-  RibbonSketchObjectPrefab: {fileID: 349737115531584894, guid: 58fc0e4001c274e4a9909bece435b440, type: 3}
+  LinearInterpolationLineSketchObjectPrefab: {fileID: 1524500983091648832, guid: f8d9aff7463b79649a9d76ebc53f39a7,
+    type: 3}
+  SketchObjectGroupPrefab: {fileID: 3810263403817002055, guid: 0973b0f6962b00d479e700076fc02bfd,
+    type: 3}
+  SketchObjectSelectionPrefab: {fileID: 1565193450362279123, guid: 80263d6ccfae2d946a931e6be3d3e021,
+    type: 3}
+  PatchSketchObjectPrefab: {fileID: 1583689454566765405, guid: 4d4802fdda75138449a38e9437d0afdd,
+    type: 3}
+  RibbonSketchObjectPrefab: {fileID: 349737115531584894, guid: 58fc0e4001c274e4a9909bece435b440,
+    type: 3}
   DefaultTextureDirectory: C:/Users/mail/Documents/Unity Projects/vr-bezier-surface-sketching-tool/Assets\Textures

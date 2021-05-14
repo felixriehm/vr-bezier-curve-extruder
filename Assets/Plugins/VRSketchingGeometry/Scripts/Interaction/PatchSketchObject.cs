@@ -41,7 +41,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
             Mesh patchMesh = PatchMesh.GeneratePatchMesh(controlPoints, width, height, this.ResolutionWidth, this.ResolutionHeight);
             SetMesh(patchMesh);
         }
-
+        
         protected void SetMesh(Mesh mesh) {
             Mesh oldMesh = this.GetComponent<MeshFilter>().sharedMesh;
             Destroy(oldMesh);
@@ -189,7 +189,6 @@ namespace VRSketchingGeometry.SketchObjectManagement
             {
                 ControlPoints = this.GetControlPoints(),
                 Width = this.Width,
-                Height = this.Height,
                 ResolutionWidth = this.ResolutionWidth,
                 ResolutionHeight = this.ResolutionHeight,
                 SketchMaterial = new SketchMaterialData(meshRenderer.sharedMaterial)
