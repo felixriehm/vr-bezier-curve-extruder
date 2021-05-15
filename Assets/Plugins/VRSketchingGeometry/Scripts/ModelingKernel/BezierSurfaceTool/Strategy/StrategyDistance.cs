@@ -16,8 +16,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.Strategy
             {
                 case 1:
                 case 3:
-                    float refDistance = Vector3.Distance(bezierSurfaceToolStateData.cpHandles[i-1].transform.position,
-                        bezierSurfaceToolStateData.cpHandles[i].transform.position);
+                    float refDistance = 1f;
                     float distance = Vector3.Distance(bezierSurfaceToolStateData.cpHandles[0].transform.position,
                         bezierSurfaceToolStateData.cpHandles[2].transform.position);
                     

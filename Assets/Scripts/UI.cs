@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,16 @@ public class UI : MonoBehaviour
     private Text stateValue;
     [SerializeField]
     private Text strategyValue;
+    [SerializeField]
+    private Text runtimeValue;
+    
+    private int timeSinceStartup;
+
+    private void Update()
+    {
+        timeSinceStartup = (int) Time.realtimeSinceStartup;
+        runtimeValue.text = timeSinceStartup/60 + ":" + (timeSinceStartup % 60).ToString("00") + " minutes";
+    }
 
     public void ChangeState(BezierSurfaceTool.BezierSurfaceToolState state)
     {

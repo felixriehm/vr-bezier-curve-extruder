@@ -36,6 +36,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         {
             // init bezier surface so it can be used later to continuously add temporary bezier patches
             BezierSurfaceToolStateData.currentBezierSurface = Object.Instantiate(BezierSurfaceToolSettings.BezierSurfaceSketchObjectPrefab).GetComponent<BezierSurfaceSketchObject>();
+            BezierSurfaceToolStateData.currentBezierSurface.name = "BezierSurface";
             
             // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
             BezierSurfaceToolStateData.prevCpHandles = new Vector3[4];

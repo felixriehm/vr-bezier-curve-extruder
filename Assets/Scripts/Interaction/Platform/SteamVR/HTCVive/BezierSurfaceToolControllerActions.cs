@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Valve.VR;
+using Valve.VR.Extras;
 using VRSketchingGeometry;
 using VRSketchingGeometry.BezierSurfaceTool;
+using VRSketchingGeometry.SketchObjectManagement;
 
 public class BezierSurfaceToolControllerActions : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     [SerializeField]
     private UnityEvent<BezierSurfaceTool.DrawingCurveStrategy> OnStrategyChanged;
     [SerializeField]
-    private GameObject ui;
+    private SteamVR_LaserPointer laserPointer;
     public SteamVR_Input_Sources leftHandType; 
     public SteamVR_Input_Sources rightHandType;
     public SteamVR_Action_Boolean bezierSurfaceToolAction;
@@ -29,6 +31,10 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
 
     private void Start()
     {
+        laserPointer.PointerIn += PointerInside;
+        laserPointer.PointerClick += PointerClick;
+        laserPointer.PointerOut += PointerOutside;
+        
         bezierSurfaceTool = Instantiate(Defaults.BezierSurfaceToolPrefab).GetComponent<BezierSurfaceTool>();
         bezierSurfaceTool.GetOnStateChangedEvent().AddListener((state) => {OnStateChanged.Invoke(state);});
         bezierSurfaceTool.GetOnStrategyChangedEvent().AddListener((strategy) => {OnStrategyChanged.Invoke(strategy);});
@@ -94,14 +100,16 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
             //Debug.Log("BezierSurfaceTool activated");
             bezierSurfaceToolActionSet.Activate();
             bezierSurfaceTool.StartTool(leftControllerOrigin, rightControllerOrigin);
-            ui.SetActive(true);
+            laserPointer.pauseUpdate = true;
+            laserPointer.holder.SetActive(false);
         }
         else
         {
             //Debug.Log("BezierSurfaceTool deactivated");
             bezierSurfaceToolActionSet.Deactivate();
             bezierSurfaceTool.ExitTool();
-            ui.SetActive(false);
+            laserPointer.pauseUpdate = false;
+            laserPointer.holder.SetActive(true);
         }
     }
     
@@ -120,6 +128,32 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         if (_strategyCounter <= 0)
         {
             _strategyCounter = 4;
+        }
+    }
+    
+    private void PointerClick(object sender, PointerEventArgs e)
+    {
+        if (e.target.name == "BezierSurface")
+        {
+            Destroy(e.target.gameObject);
+        }
+    }
+
+    private void PointerInside(object sender, PointerEventArgs e)
+    {
+        if (e.target.name == "BezierSurface")
+        {
+            BezierSurfaceSketchObject surface = e.target.gameObject.GetComponent<BezierSurfaceSketchObject>();
+            surface.highlight();
+        }
+    }
+    
+    public void PointerOutside(object sender, PointerEventArgs e)
+    {
+        if (e.target.name == "BezierSurface")
+        {
+            BezierSurfaceSketchObject surface = e.target.gameObject.GetComponent<BezierSurfaceSketchObject>();
+            surface.revertHighlight();
         }
     }
 }
