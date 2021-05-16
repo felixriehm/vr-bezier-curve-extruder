@@ -21,7 +21,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         internal abstract void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f);
         internal abstract void ExitTool();
         internal abstract void StartDrawingSurface();
-        internal abstract void StopDrawingSurface();
+        internal abstract BezierSurfaceSketchObject StopDrawingSurface();
         internal abstract void ShowIndicators(bool show);
         internal abstract void ChangeCurveIntensity(BezierSurfaceTool.BezierSurfaceToolController controller, float amount);
         internal abstract void Update();

@@ -20,7 +20,7 @@ namespace VRSketchingGeometry.Serialization
         /// </summary>
         /// <remarks>XmlArrayItem attribute is required for correct deserialization of derived classes.</remarks>
         [XmlArrayItem(typeof(SketchObjectData)), XmlArrayItem(typeof(LineSketchObjectData)), XmlArrayItem(typeof(PatchSketchObjectData)), 
-            XmlArrayItem(typeof(RibbonSketchObjectData))]
+            XmlArrayItem(typeof(RibbonSketchObjectData)), XmlArrayItem(typeof(BezierSurfaceObjectData))]
         public List<SketchObjectData> SketchObjects;
         public List<SketchObjectGroupData> SketchObjectGroups;
 

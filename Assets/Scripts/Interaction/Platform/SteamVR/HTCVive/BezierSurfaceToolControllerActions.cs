@@ -20,6 +20,8 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     public SteamVR_Action_Boolean drawBezierSurface;
     public SteamVR_Action_Boolean nextCurveStrategy;
     public SteamVR_Action_Boolean lastCurveStrategy;
+    public SteamVR_Action_Boolean saveSketchWorld;
+    public SteamVR_Action_Boolean loadSketchWorld;
     public SteamVR_Action_Vector2 bezierCurveIntensity;
     public Transform leftControllerOrigin;
     public Transform rightControllerOrigin;
@@ -28,20 +30,27 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     private BezierSurfaceTool bezierSurfaceTool;
     private BezierSurfaceTool.DrawingCurveStrategy[] _curveStrategies = new BezierSurfaceTool.DrawingCurveStrategy[4];
     private int _strategyCounter;
+    private SketchWorld sketchWorld;
 
     private void Start()
     {
+        sketchWorld = Instantiate(Defaults.SketchWorldPrefab).GetComponent<SketchWorld>();
+        
         laserPointer.PointerIn += PointerInside;
         laserPointer.PointerClick += PointerClick;
         laserPointer.PointerOut += PointerOutside;
         
         bezierSurfaceTool = Instantiate(Defaults.BezierSurfaceToolPrefab).GetComponent<BezierSurfaceTool>();
+        bezierSurfaceTool.SetSketchWorld(sketchWorld);
         bezierSurfaceTool.GetOnStateChangedEvent().AddListener((state) => {OnStateChanged.Invoke(state);});
         bezierSurfaceTool.GetOnStrategyChangedEvent().AddListener((strategy) => {OnStrategyChanged.Invoke(strategy);});
         OnStateChanged.Invoke(bezierSurfaceTool.GetCurrentState());
 
         bezierSurfaceToolAction.AddOnStateDownListener(OnBezierSurfaceToolActionStateDown, leftHandType);
         bezierSurfaceToolAction.AddOnStateDownListener(OnBezierSurfaceToolActionStateDown, rightHandType);
+        
+        saveSketchWorld.AddOnStateDownListener(OnSaveSketchWorldActionStateDown, leftHandType);
+        loadSketchWorld.AddOnStateDownListener(OnLoadSketchWorldActionStateDown, rightHandType);
         
         lastCurveStrategy.AddOnStateDownListener(OnLastCurveStrategyActionStateDown, leftHandType);
         nextCurveStrategy.AddOnStateDownListener(OnNextCurveStrategyActionStateDown, rightHandType);
@@ -128,6 +137,24 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         if (_strategyCounter <= 0)
         {
             _strategyCounter = 4;
+        }
+    }
+    
+    private void OnSaveSketchWorldActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
+    {
+        if (bezierSurfaceTool.GetCurrentState() == BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted)
+        {
+            string savePath = System.IO.Path.Combine(Application.dataPath, "serialization\\BezierSurfaceTool.xml");
+            sketchWorld.SaveSketchWorld(savePath);
+        }
+    }
+    
+    private void OnLoadSketchWorldActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
+    {
+        if (bezierSurfaceTool.GetCurrentState() == BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted)
+        {
+            string load = System.IO.Path.Combine(Application.dataPath, "serialization\\BezierSurfaceTool.xml");
+            sketchWorld.LoadSketchWorld(load);
         }
     }
     

@@ -95,4 +95,6 @@ Assets/StreamingAssets.meta
 Assets/XR.meta
 Assets/StreamingAssets
 Assets/XR
+Assets/serialization
+Assets/serialization.meta
 ProjectSettings/XRPackageSettings.asset

@@ -36,8 +36,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         {
             // init bezier surface so it can be used later to continuously add temporary bezier patches
             BezierSurfaceToolStateData.currentBezierSurface = Object.Instantiate(BezierSurfaceToolSettings.BezierSurfaceSketchObjectPrefab).GetComponent<BezierSurfaceSketchObject>();
-            BezierSurfaceToolStateData.currentBezierSurface.name = "BezierSurface";
-            
+
             // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
             BezierSurfaceToolStateData.prevCpHandles = new Vector3[4];
             for (int i = 0; i < BezierSurfaceToolStateData.cpHandles.Length; i++)
@@ -55,9 +54,10 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceTool.CurrentBezierSurfaceToolState = new StateDrawingSurface(BezierSurfaceTool, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
         }
 
-        internal override void StopDrawingSurface()
+        internal override BezierSurfaceSketchObject StopDrawingSurface()
         {
             Debug.Log("Can not execute method 'StopDrawSurface()': Tool must be drawing surface.");
+            return null;
         }
         
         internal override void ExitTool()

@@ -19,6 +19,7 @@ namespace VRSketchingGeometry
         public GameObject BezierCurveSketchObjectPrefab;
         public GameObject BezierSurfaceToolPrefab;
         public GameObject BezierPatchSketchObjectPrefab;
+        public GameObject BezierSurfaceSketchObjectPrefab;
         public GameObject LinearInterpolationLineSketchObjectPrefab;
         public GameObject SketchObjectGroupPrefab;
         public GameObject SketchObjectSelectionPrefab;

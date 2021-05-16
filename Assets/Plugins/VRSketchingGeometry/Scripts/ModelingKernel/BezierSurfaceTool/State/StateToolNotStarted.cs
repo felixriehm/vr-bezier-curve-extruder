@@ -114,9 +114,10 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             Debug.Log("Can not execute method 'StartDrawSurface()': Tool must be drawing curve");
         }
 
-        internal override void StopDrawingSurface()
+        internal override BezierSurfaceSketchObject StopDrawingSurface()
         {
             Debug.Log("Can not execute method 'StopDrawSurface()': Tool must be drawing surface.");
+            return null;
         }
 
         internal override void ShowIndicators(bool show)

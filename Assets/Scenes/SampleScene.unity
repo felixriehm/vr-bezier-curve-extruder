@@ -482,6 +482,12 @@ MonoBehaviour:
   lastCurveStrategy:
     actionPath: /actions/BezierSurfaceTool/in/LastCurveStrategy
     needsReinit: 0
+  saveSketchWorld:
+    actionPath: /actions/default/in/SaveSketchWorld
+    needsReinit: 0
+  loadSketchWorld:
+    actionPath: /actions/default/in/LoadSketchWorld
+    needsReinit: 0
   bezierCurveIntensity:
     actionPath: /actions/BezierSurfaceTool/in/CurveIntensity
     needsReinit: 0

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VRSketchingGeometry.SketchObjectManagement;
 
 namespace VRSketchingGeometry.BezierSurfaceTool.State
 {
@@ -21,7 +22,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             Debug.Log("Can not execute method 'StartDrawSurface()': Tool must be drawing curve");
         }
 
-        internal override void StopDrawingSurface()
+        internal override BezierSurfaceSketchObject StopDrawingSurface()
         {
             if (!AllCounterpartVerticesAreEqual())
             {
@@ -31,6 +32,8 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
 
             BezierSurfaceToolStateData.BezierCurveSketchObject.gameObject.SetActive(true);
             BezierSurfaceTool.CurrentBezierSurfaceToolState = new StateDrawingCurve(BezierSurfaceTool, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
+
+            return BezierSurfaceToolStateData.currentBezierSurface;
         }
 
         internal override void Update()
@@ -127,7 +130,10 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             {
                 Object.Destroy(BezierSurfaceToolStateData.temporaryBezierPatch.gameObject);
             }
-                
+            
+            // the surface the user is currently drawing will also be deleted
+            Object.Destroy(BezierSurfaceToolStateData.currentBezierSurface);
+            
             BezierSurfaceTool.CurrentBezierSurfaceToolState = new StateToolNotStarted(BezierSurfaceTool, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
         }
         

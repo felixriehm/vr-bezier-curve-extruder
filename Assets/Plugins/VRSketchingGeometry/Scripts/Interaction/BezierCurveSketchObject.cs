@@ -27,8 +27,8 @@ namespace VRSketchingGeometry.SketchObjectManagement
             meshFilter = GetComponent<MeshFilter>();
             meshCollider = GetComponent<MeshCollider>();
 
-            SplineMesh = new SplineMesh(new BezierCurve(InterpolationSteps), Vector3.one * lineDiameter);
-            LinearSplineMesh = new SplineMesh(new LinearInterpolationSpline(), Vector3.one * lineDiameter);
+            SplineMesh = new BezierCurveMesh(new BezierCurve(InterpolationSteps), Vector3.one * lineDiameter);
+            LinearSplineMesh = new BezierCurveMesh(new LinearInterpolationSpline(), Vector3.one * lineDiameter);
 
             meshCollider.sharedMesh = meshFilter.sharedMesh;
             setUpOriginalMaterialAndMeshRenderer();
@@ -43,11 +43,22 @@ namespace VRSketchingGeometry.SketchObjectManagement
             InterpolationSteps = steps;
             List<Vector3> controlPoints = this.GetControlPoints();
             this.SplineMesh.GetCrossSectionShape(out List<Vector3> CurrentCrossSectionShape, out List<Vector3> CurrentCrossSectionNormals);
-            SplineMesh = new SplineMesh(new BezierCurve(steps), this.lineDiameter * Vector3.one);
+            SplineMesh = new BezierCurveMesh(new BezierCurve(steps), this.lineDiameter * Vector3.one);
             this.SetLineCrossSection(CurrentCrossSectionShape, CurrentCrossSectionNormals, this.lineDiameter);
             if (controlPoints.Count != 0) {
                 this.SetControlPointsLocalSpace(controlPoints);
             }
+        }
+        
+        /// <summary>
+        /// Factory method for instantiating a SplineMesh.
+        /// </summary>
+        /// <remarks>This can be overridden to easily change the Spline and TubeMesh used for creating this line.</remarks>
+        /// <param name="interpolationSteps"></param>
+        /// <param name="lineDiameter"></param>
+        /// <returns></returns>
+        protected override SplineMesh MakeSplineMesh(int interpolationSteps, Vector3 lineDiameter) {
+            return new BezierCurveMesh(new BezierCurve(interpolationSteps), lineDiameter);
         }
     }
 }

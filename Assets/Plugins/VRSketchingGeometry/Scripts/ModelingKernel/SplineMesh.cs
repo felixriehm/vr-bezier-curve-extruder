@@ -20,8 +20,8 @@ namespace VRSketchingGeometry.Meshing
     /// <remarks>Original author: tterpi</remarks>
     public class SplineMesh
     {
-        private Spline Spline;
-        private ITubeMesh TubeMesh;
+        protected Spline Spline;
+        protected ITubeMesh TubeMesh;
 
         /// <summary>
         /// Contructor with default circular cross section and default tube mesh implementation.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VRSketchingGeometry.Serialization;
 
@@ -9,18 +10,28 @@ namespace VRSketchingGeometry.SketchObjectManagement
     {
         private MeshFilter meshFilter;
         private MeshCollider meshCollider;
+        private List<PatchSketchObjectData> bezierPatchData;
+        
         public int PatchCount { get; private set; }
         
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
             meshFilter = GetComponent<MeshFilter>();
             meshCollider = GetComponent<MeshCollider>();
             meshFilter.mesh = new Mesh();
             PatchCount = 0;
+            bezierPatchData = new List<PatchSketchObjectData>();
+            name = "BezierSurface";
         }
 
         public void AddPatch(BezierPatchSketchObject patch)
         {
+            // save bezier patch data for serialization
+            PatchSketchObjectData patchSketchObjectData = (PatchSketchObjectData) patch.gameObject.GetComponent<ISerializableComponent>().GetData();
+            bezierPatchData.Add(patchSketchObjectData);
+
+            // merge bezier patch mesh with bezier surface mesh
             MeshFilter meshFilters = patch.gameObject.GetComponent<MeshFilter>();
             CombineInstance[] combine = new CombineInstance[2];
 
@@ -38,12 +49,35 @@ namespace VRSketchingGeometry.SketchObjectManagement
 
         public SerializableComponentData GetData()
         {
-            throw new System.NotImplementedException();
+            BezierSurfaceObjectData data = new BezierSurfaceObjectData
+            {
+                BezierPatchData = this.bezierPatchData
+            };
+                
+            data.SetDataFromTransform(this.transform);
+            
+            return data;
         }
 
         public void ApplyData(SerializableComponentData data)
         {
-            throw new System.NotImplementedException();
+            if (data is BezierSurfaceObjectData surfaceData)
+            {
+                transform.position = Vector3.zero;
+                transform.rotation = Quaternion.identity;
+                transform.localScale = Vector3.one;
+                
+                GameObject bezierPatch;
+                foreach (var patchSketchObjectData in surfaceData.BezierPatchData)
+                {
+                    bezierPatch = Instantiate(Defaults.BezierPatchSketchObjectPrefab);
+                    bezierPatch.GetComponent<ISerializableComponent>().ApplyData(patchSketchObjectData);
+                    AddPatch(bezierPatch.GetComponent<BezierPatchSketchObject>());
+                    Destroy(bezierPatch);
+                }
+            
+                data.ApplyDataToTransform(this.transform);
+            }
         }
     }
 }

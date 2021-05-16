@@ -13,6 +13,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
     public class BezierSurfaceTool : MonoBehaviour
     {
         public BezierSurfaceToolSettings BezierSurfaceToolSettings;
+        private SketchWorld sketchWorld;
         
         internal State.BezierSurfaceToolState CurrentBezierSurfaceToolState { get; set; }
         
@@ -62,9 +63,14 @@ namespace VRSketchingGeometry.BezierSurfaceTool
             CurrentBezierSurfaceToolState.ShowIndicators(show);
         }
         
-        public void StopDrawSurface()
+        public BezierSurfaceSketchObject StopDrawSurface()
         {
-            CurrentBezierSurfaceToolState.StopDrawingSurface();
+            BezierSurfaceSketchObject surface = CurrentBezierSurfaceToolState.StopDrawingSurface();
+            if (sketchWorld != null && surface != null)
+            {
+                sketchWorld.AddObject(surface);
+            }
+            return surface;
         }
         
         public void StartDrawSurface()
@@ -100,6 +106,11 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         public DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
         {
             return CurrentBezierSurfaceToolState.GetCurrentDrawingCurveStrategy();
+        }
+
+        public void SetSketchWorld(SketchWorld sketchWorld)
+        {
+            this.sketchWorld = sketchWorld;
         }
     }
 }
