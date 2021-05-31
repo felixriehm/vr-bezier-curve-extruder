@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VRSketchingGeometry.Serialization;
 using VRSketchingGeometry.SketchObjectManagement;
 
 namespace VRSketchingGeometry.BezierSurfaceTool.State
@@ -12,7 +13,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceToolStateData.OnStateChanged.Invoke(BezierSurfaceTool.BezierSurfaceToolState.DrawingSurface);
         }
         
-        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
+        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple)
         {
             Debug.Log("Can not execute method 'StartTool()': Tool has already started.");
         }
@@ -26,7 +27,8 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         {
             if (!AllCounterpartVerticesAreEqual())
             {
-                BezierSurfaceToolStateData.currentBezierSurface.AddPatch(BezierSurfaceToolStateData.temporaryBezierPatch);
+                BezierSurfaceToolStateData.currentBezierSurface.AddPatch((PatchSketchObjectData) BezierSurfaceToolStateData.tmpBPSerializableComp.GetData());
+                BezierSurfaceToolStateData.currentBezierSurface.CombinePatchesToSingleMesh();
             }
             Object.Destroy(BezierSurfaceToolStateData.temporaryBezierPatch.gameObject);
 
@@ -45,7 +47,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                 // Add temporary patch to surface by combining meshes.
                 // There is no check for 'AllCounterPartVerticesAreEqual()' because 'BezierPatchMinDistance' ensures
                 // that this can no be the case.
-                BezierSurfaceToolStateData.currentBezierSurface.AddPatch(BezierSurfaceToolStateData.temporaryBezierPatch);
+                BezierSurfaceToolStateData.currentBezierSurface.AddPatch((PatchSketchObjectData) BezierSurfaceToolStateData.tmpBPSerializableComp.GetData());
                     
                 // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
                 for (int i = 0; i < BezierSurfaceToolStateData.cpHandles.Length; i++)

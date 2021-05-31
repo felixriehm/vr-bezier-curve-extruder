@@ -23,7 +23,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         public GameObject BezierPatchSketchObjectPrefab;
         public GameObject BezierSurfaceSketchObjectPrefab;
         [Range(0.002f, 4)]
-        public float BezierPatchMinDistance = 0.05f;
+        public float BezierPatchMinDistance = 0.02f;
         [Header("Bezier Curve")]
         public GameObject BezierCurveSketchObjectPrefab;
         public GameObject BezierSurfaceToolIndicatorPrefab;

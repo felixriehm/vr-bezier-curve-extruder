@@ -18,7 +18,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceToolStateData = stateData;
         }
         
-        internal abstract void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f);
+        internal abstract void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple);
         internal abstract void ExitTool();
         internal abstract void StartDrawingSurface();
         internal abstract BezierSurfaceSketchObject StopDrawingSurface();
@@ -51,8 +51,6 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                     childRenderer.enabled = show;
                 }
             }
-
-            SetDrawingCurveStrategy(GetCurrentDrawingCurveStrategy());
         }
 
         protected internal UnityEvent<BezierSurfaceTool.BezierSurfaceToolState> GetOnStateChangedEvent()

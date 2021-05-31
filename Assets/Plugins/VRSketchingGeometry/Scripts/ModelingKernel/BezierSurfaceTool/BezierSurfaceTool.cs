@@ -43,9 +43,9 @@ namespace VRSketchingGeometry.BezierSurfaceTool
             CurrentBezierSurfaceToolState = new StateToolNotStarted(this, BezierSurfaceToolSettings, new BezierSurfaceToolStateData());
         }
 
-        public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
+        public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple)
         {
-            CurrentBezierSurfaceToolState.StartTool(leftControllerOrigin, rightControllerOrigin, steps ,diameter);
+            CurrentBezierSurfaceToolState.StartTool(leftControllerOrigin, rightControllerOrigin, steps ,diameter, drawingCurveStrategy);
         }
 
         private void Update()

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VRSketchingGeometry.Serialization;
 using VRSketchingGeometry.SketchObjectManagement;
 
 namespace VRSketchingGeometry.BezierSurfaceTool.State
@@ -27,7 +28,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             return BezierSurfaceTool.BezierSurfaceToolState.DrawingCurve;
         }
 
-        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
+        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple)
         {
             Debug.Log("Can not execute method 'StartTool()': Tool has already started.");
         }
@@ -46,6 +47,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             
             // init temporary bezier patch so it can be continuously be drawn later and added to the bezier surface
             BezierSurfaceToolStateData.temporaryBezierPatch = Object.Instantiate(BezierSurfaceToolSettings.BezierPatchSketchObjectPrefab).GetComponent<BezierPatchSketchObject>();
+            BezierSurfaceToolStateData.tmpBPSerializableComp = BezierSurfaceToolStateData.temporaryBezierPatch.gameObject.GetComponent<ISerializableComponent>();
 
             // deactivate bezier curve
             BezierSurfaceToolStateData.BezierCurveSketchObject.gameObject.SetActive(false);

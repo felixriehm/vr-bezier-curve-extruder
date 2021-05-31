@@ -113,6 +113,6 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 9463805ee6ca2344397c6628a80a84d3, type: 2}
   Width: 4
   Height: 0
-  ResolutionWidth: 12
-  ResolutionHeight: 12
+  ResolutionWidth: 24
+  ResolutionHeight: 2
   MinimumDistanceToLastSegment: 0.2

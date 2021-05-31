@@ -111,3 +111,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Defaults: {fileID: 11400000, guid: 80ac1fe1704d8434eac74bc2c69b9794, type: 2}
   highlightMaterial: {fileID: 2100000, guid: 9463805ee6ca2344397c6628a80a84d3, type: 2}
+  bezierSurfaceToolSettings: {fileID: 11400000, guid: da2376ddb74cf0f4bb6509702f5861ce, type: 2}

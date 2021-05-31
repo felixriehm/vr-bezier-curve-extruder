@@ -12,7 +12,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceToolStateData.OnStateChanged.Invoke(BezierSurfaceTool.BezierSurfaceToolState.ToolNotStarted);
         }
 
-        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f)
+        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple)
         {
             // init arrays for the later for loop
             Transform[] controllerOrigins = new Transform[2];
@@ -85,7 +85,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceToolStateData.BezierCurveSketchObject.SetInterpolationSteps(steps);
 
             // set drawing curve strategy
-            SetDrawingCurveStrategy(BezierSurfaceTool.DrawingCurveStrategy.Simple);
+            SetDrawingCurveStrategy(drawingCurveStrategy);
             
             // get control points for the bezier curve
             List<Vector3> controlPoints = new List<Vector3>();

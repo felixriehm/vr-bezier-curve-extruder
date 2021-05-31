@@ -98,3 +98,8 @@ Assets/XR
 Assets/serialization
 Assets/serialization.meta
 ProjectSettings/XRPackageSettings.asset
+Assets/Plugins/HTC.UnityPlugin
+Assets/Plugins/HTC.UnityPlugin.meta
+Assets/Questionnaires
+Assets/Questionnaires.meta
+Assets/UsabilityTestData
