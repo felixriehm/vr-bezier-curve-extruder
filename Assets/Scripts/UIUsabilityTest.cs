@@ -47,6 +47,7 @@ public class UIUsabilityTest : MonoBehaviour
     private string outputPath;
     private int _drawSurfaceClickCounter;
     private SketchWorld sketchWorld;
+    private TextMeshProUGUI nextButtonText;
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +67,8 @@ public class UIUsabilityTest : MonoBehaviour
         }
 
         _drawSurfaceClickCounter = 0;
+
+        nextButtonText = nextButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -156,6 +159,8 @@ public class UIUsabilityTest : MonoBehaviour
                 mainImage.sprite = tulip;
                 OnImageChanged.Invoke(tulip);
                 sketchWorld = controllerScript.CreateNewSketchWorld();
+                nextButtonText.text = "Vorbereitung beenden";
+                nextButtonText.fontSize = 16f;
                 _stopWatch = new Stopwatch();
                 _stopWatch.Start();
                 break;
@@ -165,10 +170,12 @@ public class UIUsabilityTest : MonoBehaviour
                 
                 mainTitle.text = "Interaktionstechnik " + variation + " - Aufgabe " + _task;
                 mainText.text = "Zeichne in den nächsten 5 Minuten die rechts dargestellte " + imageName + ". Wenn du fertig " + 
-                                "bist, drücke auf 'Weiter', um die Fragen zu beantworten.\n\n Info: Vergiss nicht, dass" + 
+                                "bist, drücke auf 'Aufgabe beenden', um die Fragen zu beantworten.\n\n Info: Vergiss nicht, dass" + 
                                 "du auch die Kurvenstärke justieren kannst.";
                 mainImage.sprite = sprite;
                 OnImageChanged.Invoke(sprite);
+                nextButtonText.fontSize = 16f;
+                nextButtonText.text = "Aufgabe beenden";
                 using (StreamWriter sw = File.AppendText(outputPath))
                 {
                     sw.WriteLine("Interaktionstechnik " + variation + " - Aufgabe " + _task);

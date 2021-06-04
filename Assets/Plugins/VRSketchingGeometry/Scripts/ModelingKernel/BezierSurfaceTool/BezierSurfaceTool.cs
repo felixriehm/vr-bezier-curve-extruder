@@ -9,7 +9,6 @@ using VRSketchingGeometry.BezierSurfaceTool.Strategy;
 
 namespace VRSketchingGeometry.BezierSurfaceTool
 {
-    // TODO: wie BezierSurfaces speichern und löschen
     public class BezierSurfaceTool : MonoBehaviour
     {
         public BezierSurfaceToolSettings BezierSurfaceToolSettings;
