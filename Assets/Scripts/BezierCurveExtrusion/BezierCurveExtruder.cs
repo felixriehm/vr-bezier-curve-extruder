@@ -43,7 +43,7 @@ namespace BezierCurveExtrusion
             CurrentBezierCurveExtruderState = new StateIdle(this, BezierCurveExtruderSettings, new BezierCurveExtruderStateData());
         }
 
-        public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
+        public void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
         {
             CurrentBezierCurveExtruderState.Init(leftControllerOrigin, rightControllerOrigin, steps ,diameter, drawingCurveStrategy);
         }
@@ -53,7 +53,7 @@ namespace BezierCurveExtrusion
             CurrentBezierCurveExtruderState.Update();
         }
 
-        public void ExitTool()
+        public void Reset()
         {
             CurrentBezierCurveExtruderState.Reset();
         }
@@ -63,7 +63,7 @@ namespace BezierCurveExtrusion
             CurrentBezierCurveExtruderState.ShowIndicators(show);
         }
         
-        public ExtrudedBezierCurveSketchObject StopDrawSurface()
+        public ExtrudedBezierCurveSketchObject StopCurveExtrusion()
         {
             ExtrudedBezierCurveSketchObject extrudedBezierCurve = CurrentBezierCurveExtruderState.StopExtrusion();
             if (sketchWorld != null && extrudedBezierCurve != null)
@@ -73,7 +73,7 @@ namespace BezierCurveExtrusion
             return extrudedBezierCurve;
         }
         
-        public void StartDrawSurface()
+        public void StartCurveExtrusion()
         {
             CurrentBezierCurveExtruderState.StartExtrusion();
         }

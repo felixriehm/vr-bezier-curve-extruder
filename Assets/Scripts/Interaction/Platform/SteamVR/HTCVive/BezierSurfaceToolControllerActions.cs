@@ -100,7 +100,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
             fromsource == leftHandType && drawBezierSurface.GetState(rightHandType))
         {
             //Debug.Log("BezierSurfaceTool: drawing");
-            bezierCurveExtruder.StartDrawSurface();
+            bezierCurveExtruder.StartCurveExtrusion();
             drawSurfaceClick.Invoke();
         }
     }
@@ -108,7 +108,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     private void OnDrawBezierSurfaceStateUpAction(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
     {
         //Debug.Log("BezierSurfaceTool: not drawing");
-        bezierCurveExtruder.StopDrawSurface();
+        bezierCurveExtruder.StopCurveExtrusion();
     }
 
     private void OnBezierSurfaceToolActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
@@ -117,7 +117,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         {
             //Debug.Log("BezierSurfaceTool activated");
             bezierSurfaceToolActionSet.Activate();
-            bezierCurveExtruder.StartTool(leftControllerOrigin, rightControllerOrigin, 24, 0.02f, toolStartCurveStrategy);
+            bezierCurveExtruder.Init(leftControllerOrigin, rightControllerOrigin, 24, 0.02f, toolStartCurveStrategy);
             laserPointer.enabled = false;
             steamVRRaycaster.enabled = false;
             laserPointer.holder.SetActive(false);
@@ -126,7 +126,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         {
             //Debug.Log("BezierSurfaceTool deactivated");
             bezierSurfaceToolActionSet.Deactivate();
-            bezierCurveExtruder.ExitTool();
+            bezierCurveExtruder.Reset();
             laserPointer.enabled = true;
             steamVRRaycaster.enabled = true;
             laserPointer.holder.SetActive(true);
