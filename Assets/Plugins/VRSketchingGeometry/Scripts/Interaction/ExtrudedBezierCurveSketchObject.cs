@@ -80,7 +80,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
 
         public SerializableComponentData GetData()
         {
-            BezierSurfaceObjectData data = new BezierSurfaceObjectData
+            ExtrudedBezierCurveObjectData data = new ExtrudedBezierCurveObjectData
             {
                 BezierPatchData = this.bezierPatchData
             };
@@ -92,7 +92,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
 
         public void ApplyData(SerializableComponentData data)
         {
-            if (data is BezierSurfaceObjectData surfaceData)
+            if (data is ExtrudedBezierCurveObjectData surfaceData)
             {
                 transform.position = Vector3.zero;
                 transform.rotation = Quaternion.identity;

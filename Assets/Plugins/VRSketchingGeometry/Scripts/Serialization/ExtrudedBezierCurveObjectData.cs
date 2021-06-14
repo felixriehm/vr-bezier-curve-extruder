@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace VRSketchingGeometry.Serialization
 {
-    public class BezierSurfaceObjectData : SketchObjectData
+    public class ExtrudedBezierCurveObjectData : SketchObjectData
     {
         public List<PatchSketchObjectData> BezierPatchData;
         
