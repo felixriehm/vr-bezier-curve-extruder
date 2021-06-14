@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3db3e99ef16c4dfd946ce028448c6974, type: 3}
-  m_Name: BezierSurfaceToolSettings
+  m_Name: BezierCurveExtruderSettings
   m_EditorClassIdentifier: 
+  Defaults: {fileID: 11400000, guid: 80ac1fe1704d8434eac74bc2c69b9794, type: 2}
   bezierCurveLeftStartOffsetDistance: 0.1
   bezierCurveLeftStartOffsetRotation: {x: 0, y: 30, z: 0}
   bezierCurveLeftStartRotation: {x: 70, y: -30, z: 0}
@@ -20,9 +21,6 @@ MonoBehaviour:
   bezierCurveRightStartOffsetRotation: {x: 0, y: -30, z: 0}
   bezierCurveRightStartRotation: {x: 70, y: 30, z: 0}
   bezierCurveRightIntensity: 1
-  BezierPatchSketchObjectPrefab: {fileID: 7370617896637790616, guid: 7f077f55428b67b41b25e370ba8a01bc, type: 3}
-  BezierSurfaceSketchObjectPrefab: {fileID: 3868673884841014220, guid: eb778c2dce628bb449f741b08d7ab208, type: 3}
   BezierPatchMinDistance: 0.02
-  BezierCurveSketchObjectPrefab: {fileID: 768797871507807939, guid: df6534259a5035540b2e1e64b0f18e4c, type: 3}
   BezierSurfaceToolIndicatorPrefab: {fileID: 4452081667796100628, guid: aca13ba175c081c45a06b42b367b474d, type: 3}
   showIndicators: 0
