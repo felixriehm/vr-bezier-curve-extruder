@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using BezierCurveExtrusion.State;
 using UnityEditorInternal;
 using VRSketchingGeometry.SketchObjectManagement;
 using UnityEngine;
 using UnityEngine.Events;
-using VRSketchingGeometry.BezierSurfaceTool.State;
-using VRSketchingGeometry.BezierSurfaceTool.Strategy;
+using VRSketchingGeometry.Commands;
 
-namespace VRSketchingGeometry.BezierSurfaceTool
+namespace BezierCurveExtrusion
 {
-    public class BezierSurfaceTool : MonoBehaviour
+    public class BezierCurveExtruder : MonoBehaviour
     {
         public BezierSurfaceToolSettings BezierSurfaceToolSettings;
         private SketchWorld sketchWorld;
+        private CommandInvoker Invoker;
         
         internal State.BezierSurfaceToolState CurrentBezierSurfaceToolState { get; set; }
         
         public enum BezierSurfaceToolState
         {
-            ToolNotStarted,
+            Idle,
             DrawingCurve,
             DrawingSurface,
         }
@@ -39,10 +40,10 @@ namespace VRSketchingGeometry.BezierSurfaceTool
 
         private void Awake()
         {
-            CurrentBezierSurfaceToolState = new StateToolNotStarted(this, BezierSurfaceToolSettings, new BezierSurfaceToolStateData());
+            CurrentBezierSurfaceToolState = new StateIdle(this, BezierSurfaceToolSettings, new BezierSurfaceToolStateData());
         }
 
-        public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple)
+        public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
         {
             CurrentBezierSurfaceToolState.StartTool(leftControllerOrigin, rightControllerOrigin, steps ,diameter, drawingCurveStrategy);
         }
@@ -62,14 +63,14 @@ namespace VRSketchingGeometry.BezierSurfaceTool
             CurrentBezierSurfaceToolState.ShowIndicators(show);
         }
         
-        public BezierSurfaceSketchObject StopDrawSurface()
+        public ExtrudedBezierCurveSketchObject StopDrawSurface()
         {
-            BezierSurfaceSketchObject surface = CurrentBezierSurfaceToolState.StopDrawingSurface();
-            if (sketchWorld != null && surface != null)
+            ExtrudedBezierCurveSketchObject extrudedBezierCurve = CurrentBezierSurfaceToolState.StopDrawingSurface();
+            if (sketchWorld != null && extrudedBezierCurve != null)
             {
-                sketchWorld.AddObject(surface);
+                Invoker.ExecuteCommand(new AddObjectToSketchWorldRootCommand(extrudedBezierCurve, sketchWorld));
             }
-            return surface;
+            return extrudedBezierCurve;
         }
         
         public void StartDrawSurface()
@@ -110,6 +111,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool
         public void SetSketchWorld(SketchWorld sketchWorld)
         {
             this.sketchWorld = sketchWorld;
+            Invoker = new CommandInvoker();
         }
     }
 }

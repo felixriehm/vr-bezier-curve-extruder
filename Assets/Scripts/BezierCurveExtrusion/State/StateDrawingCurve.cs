@@ -3,14 +3,14 @@ using UnityEngine;
 using VRSketchingGeometry.Serialization;
 using VRSketchingGeometry.SketchObjectManagement;
 
-namespace VRSketchingGeometry.BezierSurfaceTool.State
+namespace BezierCurveExtrusion.State
 {
     internal class StateDrawingCurve : BezierSurfaceToolState
     {
-        internal StateDrawingCurve(BezierSurfaceTool tool, BezierSurfaceToolSettings settings, BezierSurfaceToolStateData stateData)
+        internal StateDrawingCurve(BezierCurveExtruder tool, BezierSurfaceToolSettings settings, BezierSurfaceToolStateData stateData)
         : base(tool, settings, stateData)
         {
-            BezierSurfaceToolStateData.OnStateChanged.Invoke(BezierSurfaceTool.BezierSurfaceToolState.DrawingCurve);
+            BezierSurfaceToolStateData.OnStateChanged.Invoke(BezierCurveExtruder.BezierSurfaceToolState.DrawingCurve);
         }
         
         internal override void Update()
@@ -23,12 +23,12 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             BezierSurfaceToolStateData.BezierCurveSketchObject.SetControlPoints(controlPoints);
         }
 
-        internal override BezierSurfaceTool.BezierSurfaceToolState GetCurrentState()
+        internal override BezierCurveExtruder.BezierSurfaceToolState GetCurrentState()
         {
-            return BezierSurfaceTool.BezierSurfaceToolState.DrawingCurve;
+            return BezierCurveExtruder.BezierSurfaceToolState.DrawingCurve;
         }
 
-        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple)
+        internal override void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
         {
             Debug.Log("Can not execute method 'StartTool()': Tool has already started.");
         }
@@ -36,7 +36,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
         internal override void StartDrawingSurface()
         {
             // init bezier surface so it can be used later to continuously add temporary bezier patches
-            BezierSurfaceToolStateData.currentBezierSurface = Object.Instantiate(BezierSurfaceToolSettings.BezierSurfaceSketchObjectPrefab).GetComponent<BezierSurfaceSketchObject>();
+            BezierSurfaceToolStateData.CurrentExtrudedBezierCurve = Object.Instantiate(BezierSurfaceToolSettings.BezierSurfaceSketchObjectPrefab).GetComponent<ExtrudedBezierCurveSketchObject>();
 
             // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
             BezierSurfaceToolStateData.prevCpHandles = new Vector3[4];
@@ -47,16 +47,15 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             
             // init temporary bezier patch so it can be continuously be drawn later and added to the bezier surface
             BezierSurfaceToolStateData.temporaryBezierPatch = Object.Instantiate(BezierSurfaceToolSettings.BezierPatchSketchObjectPrefab).GetComponent<BezierPatchSketchObject>();
-            BezierSurfaceToolStateData.tmpBPSerializableComp = BezierSurfaceToolStateData.temporaryBezierPatch.gameObject.GetComponent<ISerializableComponent>();
 
             // deactivate bezier curve
             BezierSurfaceToolStateData.BezierCurveSketchObject.gameObject.SetActive(false);
             
             // set state to 'drawing surface'
-            BezierSurfaceTool.CurrentBezierSurfaceToolState = new StateDrawingSurface(BezierSurfaceTool, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
+            BezierCurveExtruder.CurrentBezierSurfaceToolState = new StateDrawingSurface(BezierCurveExtruder, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
         }
 
-        internal override BezierSurfaceSketchObject StopDrawingSurface()
+        internal override ExtrudedBezierCurveSketchObject StopDrawingSurface()
         {
             Debug.Log("Can not execute method 'StopDrawSurface()': Tool must be drawing surface.");
             return null;
@@ -86,7 +85,7 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                 Object.Destroy(BezierSurfaceToolStateData.temporaryBezierPatch.gameObject);
             }
                 
-            BezierSurfaceTool.CurrentBezierSurfaceToolState = new StateToolNotStarted(BezierSurfaceTool, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
+            BezierCurveExtruder.CurrentBezierSurfaceToolState = new StateIdle(BezierCurveExtruder, BezierSurfaceToolSettings, BezierSurfaceToolStateData);
         }
         
         internal override void ShowIndicators(bool show)
@@ -94,14 +93,14 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             ShowIndicatorsHelper(show);
         }
 
-        internal override void ChangeCurveIntensity(BezierSurfaceTool.BezierSurfaceToolController controller, float amount)
+        internal override void ChangeCurveIntensity(BezierCurveExtruder.BezierSurfaceToolController controller, float amount)
         {
             switch (controller)
             {
-                case BezierSurfaceTool.BezierSurfaceToolController.Left:
+                case BezierCurveExtruder.BezierSurfaceToolController.Left:
                     BezierSurfaceToolStateData.cpHandles[1].transform.Translate(0, amount, 0);;
                     break;
-                case BezierSurfaceTool.BezierSurfaceToolController.Right:
+                case BezierCurveExtruder.BezierSurfaceToolController.Right:
                     BezierSurfaceToolStateData.cpHandles[3].transform.Translate(0, amount, 0);;
                     break;
             }

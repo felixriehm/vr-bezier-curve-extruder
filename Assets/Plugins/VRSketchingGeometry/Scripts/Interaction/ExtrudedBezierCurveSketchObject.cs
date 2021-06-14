@@ -7,11 +7,8 @@ using VRSketchingGeometry.Serialization;
 namespace VRSketchingGeometry.SketchObjectManagement
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
-    public class BezierSurfaceSketchObject : SketchObject, ISerializableComponent
+    public class ExtrudedBezierCurveSketchObject : SketchObject, ISerializableComponent
     {
-        [SerializeField]
-        private BezierSurfaceToolSettings bezierSurfaceToolSettings;
-        
         private MeshFilter meshFilter;
         private MeshCollider meshCollider;
         private List<PatchSketchObjectData> bezierPatchData;
@@ -28,13 +25,22 @@ namespace VRSketchingGeometry.SketchObjectManagement
             name = "BezierSurface";
         }
 
-        public void AddPatch(PatchSketchObjectData patchSketchObjectData)
+        public void AddPatch(BezierPatchSketchObject bezierPatchSketchObject)
+        {
+            // Get patch data
+            PatchSketchObjectData patchSketchObjectData = (PatchSketchObjectData) bezierPatchSketchObject
+                .GetComponent<ISerializableComponent>().GetData();
+
+            AddPatchToExtrudedBezierCurve(patchSketchObjectData);
+        }
+        
+        private void AddPatchToExtrudedBezierCurve(PatchSketchObjectData patchSketchObjectData)
         {
             // save bezier patch data for serialization
             bezierPatchData.Add(patchSketchObjectData);
             
             // init new bezier patch and add it to surface object
-            GameObject bezierPatch = Instantiate(bezierSurfaceToolSettings.BezierPatchSketchObjectPrefab, gameObject.transform);
+            GameObject bezierPatch = Instantiate(Defaults.BezierPatchSketchObjectPrefab, gameObject.transform);
             bezierPatch.GetComponent<ISerializableComponent>().ApplyData(patchSketchObjectData);
 
             PatchCount += 1;
@@ -94,7 +100,7 @@ namespace VRSketchingGeometry.SketchObjectManagement
                 
                 foreach (var patchSketchObjectData in surfaceData.BezierPatchData)
                 {
-                    AddPatch(patchSketchObjectData);
+                    AddPatchToExtrudedBezierCurve(patchSketchObjectData);
                 }
 
                 CombinePatchesToSingleMesh();

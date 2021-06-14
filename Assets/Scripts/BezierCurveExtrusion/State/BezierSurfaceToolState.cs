@@ -1,31 +1,31 @@
-﻿using UnityEngine;
+﻿using BezierCurveExtrusion.Strategy;
+using UnityEngine;
 using UnityEngine.Events;
-using VRSketchingGeometry.BezierSurfaceTool.Strategy;
 using VRSketchingGeometry.SketchObjectManagement;
 
-namespace VRSketchingGeometry.BezierSurfaceTool.State
+namespace BezierCurveExtrusion.State
 {
     internal abstract class BezierSurfaceToolState
     {
-        protected BezierSurfaceTool BezierSurfaceTool { get; set; }
+        protected BezierCurveExtruder BezierCurveExtruder { get; set; }
         protected BezierSurfaceToolStateData BezierSurfaceToolStateData;
         protected BezierSurfaceToolSettings BezierSurfaceToolSettings;
 
-        internal BezierSurfaceToolState(BezierSurfaceTool tool, BezierSurfaceToolSettings settings, BezierSurfaceToolStateData stateData)
+        internal BezierSurfaceToolState(BezierCurveExtruder tool, BezierSurfaceToolSettings settings, BezierSurfaceToolStateData stateData)
         {
-            BezierSurfaceTool = tool;
+            BezierCurveExtruder = tool;
             BezierSurfaceToolSettings = settings;
             BezierSurfaceToolStateData = stateData;
         }
         
-        internal abstract void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierSurfaceTool.DrawingCurveStrategy drawingCurveStrategy = BezierSurfaceTool.DrawingCurveStrategy.Simple);
+        internal abstract void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple);
         internal abstract void ExitTool();
         internal abstract void StartDrawingSurface();
-        internal abstract BezierSurfaceSketchObject StopDrawingSurface();
+        internal abstract ExtrudedBezierCurveSketchObject StopDrawingSurface();
         internal abstract void ShowIndicators(bool show);
-        internal abstract void ChangeCurveIntensity(BezierSurfaceTool.BezierSurfaceToolController controller, float amount);
+        internal abstract void ChangeCurveIntensity(BezierCurveExtruder.BezierSurfaceToolController controller, float amount);
         internal abstract void Update();
-        internal abstract BezierSurfaceTool.BezierSurfaceToolState GetCurrentState();
+        internal abstract BezierCurveExtruder.BezierSurfaceToolState GetCurrentState();
         protected internal void ShowIndicatorsHelper(bool show)
         {
             foreach (var controllerHandle in BezierSurfaceToolStateData.controllerHandles)
@@ -53,22 +53,22 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
             }
         }
 
-        protected internal UnityEvent<BezierSurfaceTool.BezierSurfaceToolState> GetOnStateChangedEvent()
+        protected internal UnityEvent<BezierCurveExtruder.BezierSurfaceToolState> GetOnStateChangedEvent()
         {
             return BezierSurfaceToolStateData.OnStateChanged;
         }
-        protected internal UnityEvent<BezierSurfaceTool.DrawingCurveStrategy> GetOnStrategyChangedEvent()
+        protected internal UnityEvent<BezierCurveExtruder.DrawingCurveStrategy> GetOnStrategyChangedEvent()
         {
             return BezierSurfaceToolStateData.OnStrategyChanged;
         }
-        protected internal void SetDrawingCurveStrategy(BezierSurfaceTool.DrawingCurveStrategy strategy)
+        protected internal void SetDrawingCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy strategy)
         {
             switch (strategy)
             {
-                case BezierSurfaceTool.DrawingCurveStrategy.Simple:
+                case BezierCurveExtruder.DrawingCurveStrategy.Simple:
                     // change strategy
                     BezierSurfaceToolStateData.drawingCurveStrategy = new StrategySimple();
-                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierSurfaceTool.DrawingCurveStrategy.Simple);
+                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.Simple);
                     
                     // change visibility of supplementary handles
                     foreach (var supplementaryCpHandle in BezierSurfaceToolStateData.supplementaryCpHandles)
@@ -83,31 +83,31 @@ namespace VRSketchingGeometry.BezierSurfaceTool.State
                     BezierSurfaceToolStateData.cpHandles[1].transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1,0,0);
                     BezierSurfaceToolStateData.cpHandles[3].transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1,0,0);
                     break;
-                case BezierSurfaceTool.DrawingCurveStrategy.VectorAngle:
+                case BezierCurveExtruder.DrawingCurveStrategy.VectorAngle:
                     // change strategy
                     BezierSurfaceToolStateData.drawingCurveStrategy = new StrategyVectorAngle();
-                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierSurfaceTool.DrawingCurveStrategy.VectorAngle);
+                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.VectorAngle);
 
                     ChangeVisibilityAndColorOfHandles();
                     break;
-                case BezierSurfaceTool.DrawingCurveStrategy.RotationAngle:
+                case BezierCurveExtruder.DrawingCurveStrategy.RotationAngle:
                     // change strategy
                     BezierSurfaceToolStateData.drawingCurveStrategy = new StrategyRotationAngle();
-                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierSurfaceTool.DrawingCurveStrategy.RotationAngle);
+                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.RotationAngle);
 
                     ChangeVisibilityAndColorOfHandles();
                     break;
-                case BezierSurfaceTool.DrawingCurveStrategy.Distance:
+                case BezierCurveExtruder.DrawingCurveStrategy.Distance:
                     // change strategy
                     BezierSurfaceToolStateData.drawingCurveStrategy = new StrategyDistance();
-                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierSurfaceTool.DrawingCurveStrategy.Distance);
+                    BezierSurfaceToolStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.Distance);
 
                     ChangeVisibilityAndColorOfHandles();
                     break;
             }
         }
 
-        protected internal BezierSurfaceTool.DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
+        protected internal BezierCurveExtruder.DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
         {
             return BezierSurfaceToolStateData.drawingCurveStrategy.GetCurrentStrategy();
         }

@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
+using BezierCurveExtrusion.State;
 using UnityEngine;
-using VRSketchingGeometry.BezierSurfaceTool.State;
 
-namespace VRSketchingGeometry.BezierSurfaceTool.Strategy
+namespace BezierCurveExtrusion.Strategy
 {
-    public class StrategyVectorAngle : DrawingCurveStrategy
+    public class StrategyVectorAngle : IDrawingCurveStrategy
     {
-        BezierSurfaceTool.DrawingCurveStrategy DrawingCurveStrategy.GetCurrentStrategy()
+        BezierCurveExtruder.DrawingCurveStrategy IDrawingCurveStrategy.GetCurrentStrategy()
         {
-            return BezierSurfaceTool.DrawingCurveStrategy.VectorAngle;
+            return BezierCurveExtruder.DrawingCurveStrategy.VectorAngle;
         }
 
-        Vector3 DrawingCurveStrategy.CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData)
+        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData)
         {
             switch (i)
             {

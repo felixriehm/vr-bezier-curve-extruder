@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VRSketchingGeometry.BezierSurfaceTool
+namespace BezierCurveExtrusion
 {
     [CreateAssetMenu(fileName = "BezierSurfaceToolSettings", menuName = "ScriptableObjects/BezierSurfaceToolSettings", order = 2)]
     public class BezierSurfaceToolSettings : ScriptableObject

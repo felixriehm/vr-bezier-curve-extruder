@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using BezierCurveExtrusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -116,15 +117,15 @@ public class UIUsabilityTest : MonoBehaviour
         {
             case 0:
                 variation = "A";
-                controllerScript.SetToolStartCurveStrategy(BezierSurfaceTool.DrawingCurveStrategy.Simple);
+                controllerScript.SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy.Simple);
                 break;
             case 1:
                 variation = "B";
-                controllerScript.SetToolStartCurveStrategy(BezierSurfaceTool.DrawingCurveStrategy.VectorAngle);
+                controllerScript.SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy.VectorAngle);
                 break;
             case 2:
                 variation = "C";
-                controllerScript.SetToolStartCurveStrategy(BezierSurfaceTool.DrawingCurveStrategy.Distance);
+                controllerScript.SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy.Distance);
                 break;
         }
         

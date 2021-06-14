@@ -1,16 +1,16 @@
-﻿using UnityEngine;
-using VRSketchingGeometry.BezierSurfaceTool.State;
+﻿using BezierCurveExtrusion.State;
+using UnityEngine;
 
-namespace VRSketchingGeometry.BezierSurfaceTool.Strategy
+namespace BezierCurveExtrusion.Strategy
 {
-    public class StrategyDistance : DrawingCurveStrategy
+    public class StrategyDistance : IDrawingCurveStrategy
     {
-        BezierSurfaceTool.DrawingCurveStrategy DrawingCurveStrategy.GetCurrentStrategy()
+        BezierCurveExtruder.DrawingCurveStrategy IDrawingCurveStrategy.GetCurrentStrategy()
         {
-            return BezierSurfaceTool.DrawingCurveStrategy.Distance;
+            return BezierCurveExtruder.DrawingCurveStrategy.Distance;
         }
         
-        Vector3 DrawingCurveStrategy.CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData)
+        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData)
         {
             switch (i)
             {
