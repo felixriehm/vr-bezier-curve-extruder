@@ -6,6 +6,6 @@ namespace BezierCurveExtrusion.Strategy
     public interface IDrawingCurveStrategy
     {
         internal BezierCurveExtruder.DrawingCurveStrategy GetCurrentStrategy();
-        internal Vector3 CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData);
+        internal Vector3 CalculateControlPoint(int i, BezierCurveExtruderStateData bezierCurveExtruderStateData);
     }
 }

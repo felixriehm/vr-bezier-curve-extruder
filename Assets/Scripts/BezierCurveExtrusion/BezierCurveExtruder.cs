@@ -11,20 +11,20 @@ namespace BezierCurveExtrusion
 {
     public class BezierCurveExtruder : MonoBehaviour
     {
-        public BezierSurfaceToolSettings BezierSurfaceToolSettings;
+        public BezierCurveExtruderSettings BezierCurveExtruderSettings;
         private SketchWorld sketchWorld;
         private CommandInvoker Invoker;
         
-        internal State.BezierSurfaceToolState CurrentBezierSurfaceToolState { get; set; }
+        internal State.BezierCurveExtruderState CurrentBezierCurveExtruderState { get; set; }
         
-        public enum BezierSurfaceToolState
+        public enum BezierCurveExtruderState
         {
             Idle,
-            DrawingCurve,
-            DrawingSurface,
+            CurveView,
+            CurveExtrusion,
         }
         
-        public enum BezierSurfaceToolController
+        public enum BezierCurveExtruderController
         {
             Left,
             Right
@@ -40,32 +40,32 @@ namespace BezierCurveExtrusion
 
         private void Awake()
         {
-            CurrentBezierSurfaceToolState = new StateIdle(this, BezierSurfaceToolSettings, new BezierSurfaceToolStateData());
+            CurrentBezierCurveExtruderState = new StateIdle(this, BezierCurveExtruderSettings, new BezierCurveExtruderStateData());
         }
 
         public void StartTool(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
         {
-            CurrentBezierSurfaceToolState.StartTool(leftControllerOrigin, rightControllerOrigin, steps ,diameter, drawingCurveStrategy);
+            CurrentBezierCurveExtruderState.Init(leftControllerOrigin, rightControllerOrigin, steps ,diameter, drawingCurveStrategy);
         }
 
         private void Update()
         {
-            CurrentBezierSurfaceToolState.Update();
+            CurrentBezierCurveExtruderState.Update();
         }
 
         public void ExitTool()
         {
-            CurrentBezierSurfaceToolState.ExitTool();
+            CurrentBezierCurveExtruderState.Reset();
         }
 
         public void ShowIndicators(bool show)
         {
-            CurrentBezierSurfaceToolState.ShowIndicators(show);
+            CurrentBezierCurveExtruderState.ShowIndicators(show);
         }
         
         public ExtrudedBezierCurveSketchObject StopDrawSurface()
         {
-            ExtrudedBezierCurveSketchObject extrudedBezierCurve = CurrentBezierSurfaceToolState.StopDrawingSurface();
+            ExtrudedBezierCurveSketchObject extrudedBezierCurve = CurrentBezierCurveExtruderState.StopExtrusion();
             if (sketchWorld != null && extrudedBezierCurve != null)
             {
                 Invoker.ExecuteCommand(new AddObjectToSketchWorldRootCommand(extrudedBezierCurve, sketchWorld));
@@ -75,37 +75,37 @@ namespace BezierCurveExtrusion
         
         public void StartDrawSurface()
         {
-            CurrentBezierSurfaceToolState.StartDrawingSurface();
+            CurrentBezierCurveExtruderState.StartExtrusion();
         }
 
-        public void ChangeCurveIntensity(BezierSurfaceToolController controller, float amount)
+        public void ChangeCurveIntensity(BezierCurveExtruderController controller, float amount)
         { 
-            CurrentBezierSurfaceToolState.ChangeCurveIntensity(controller, amount);
+            CurrentBezierCurveExtruderState.ChangeCurveIntensity(controller, amount);
         }
 
         public void SetDrawingCurveStrategy(DrawingCurveStrategy strategy)
         {
-            CurrentBezierSurfaceToolState.SetDrawingCurveStrategy(strategy);
+            CurrentBezierCurveExtruderState.SetDrawingCurveStrategy(strategy);
         }
         
-        public BezierSurfaceToolState GetCurrentState()
+        public BezierCurveExtruderState GetCurrentState()
         {
-            return CurrentBezierSurfaceToolState.GetCurrentState();
+            return CurrentBezierCurveExtruderState.GetCurrentState();
         }
         
-        public UnityEvent<BezierSurfaceToolState> GetOnStateChangedEvent()
+        public UnityEvent<BezierCurveExtruderState> GetOnStateChangedEvent()
         {
-            return CurrentBezierSurfaceToolState.GetOnStateChangedEvent();
+            return CurrentBezierCurveExtruderState.GetOnStateChangedEvent();
         }
         
         public UnityEvent<DrawingCurveStrategy> GetOnStrategyChangedEvent()
         {
-            return CurrentBezierSurfaceToolState.GetOnStrategyChangedEvent();
+            return CurrentBezierCurveExtruderState.GetOnStrategyChangedEvent();
         }
         
         public DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
         {
-            return CurrentBezierSurfaceToolState.GetCurrentDrawingCurveStrategy();
+            return CurrentBezierCurveExtruderState.GetCurrentDrawingCurveStrategy();
         }
 
         public void SetSketchWorld(SketchWorld sketchWorld)

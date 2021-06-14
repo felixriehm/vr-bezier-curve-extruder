@@ -10,7 +10,7 @@ using VRSketchingGeometry.SketchObjectManagement;
 public class BezierSurfaceToolControllerActions : MonoBehaviour
 {
     [SerializeField]
-    private UnityEvent<BezierCurveExtruder.BezierSurfaceToolState> OnStateChanged;
+    private UnityEvent<BezierCurveExtruder.BezierCurveExtruderState> OnStateChanged;
     [SerializeField]
     private UnityEvent<BezierCurveExtruder.DrawingCurveStrategy> OnStrategyChanged;
     [SerializeField]
@@ -81,8 +81,8 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
 
     private void OnBezierCurveIntensityChangeAction(SteamVR_Action_Vector2 fromaction, SteamVR_Input_Sources fromsource, Vector2 axis, Vector2 delta)
     {
-        BezierCurveExtruder.BezierSurfaceToolController controller =  fromsource == leftHandType ? 
-            BezierCurveExtruder.BezierSurfaceToolController.Left : BezierCurveExtruder.BezierSurfaceToolController.Right;
+        BezierCurveExtruder.BezierCurveExtruderController controller =  fromsource == leftHandType ? 
+            BezierCurveExtruder.BezierCurveExtruderController.Left : BezierCurveExtruder.BezierCurveExtruderController.Right;
         
         if (axis.y > 0.9)
         {
@@ -113,7 +113,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
 
     private void OnBezierSurfaceToolActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
     {
-        if (bezierCurveExtruder.GetCurrentState() == BezierCurveExtruder.BezierSurfaceToolState.Idle)
+        if (bezierCurveExtruder.GetCurrentState() == BezierCurveExtruder.BezierCurveExtruderState.Idle)
         {
             //Debug.Log("BezierSurfaceTool activated");
             bezierSurfaceToolActionSet.Activate();
@@ -153,7 +153,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     
     private void OnSaveSketchWorldActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
     {
-        if (bezierCurveExtruder.GetCurrentState() == BezierCurveExtruder.BezierSurfaceToolState.Idle)
+        if (bezierCurveExtruder.GetCurrentState() == BezierCurveExtruder.BezierCurveExtruderState.Idle)
         {
             string savePath = System.IO.Path.Combine(Application.dataPath, "serialization\\BezierSurfaceTool.xml");
             sketchWorld.SaveSketchWorld(savePath);
@@ -162,7 +162,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     
     private void OnLoadSketchWorldActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
     {
-        if (bezierCurveExtruder.GetCurrentState() == BezierCurveExtruder.BezierSurfaceToolState.Idle)
+        if (bezierCurveExtruder.GetCurrentState() == BezierCurveExtruder.BezierCurveExtruderState.Idle)
         {
             string load = System.IO.Path.Combine(Application.dataPath, "serialization\\BezierSurfaceTool.xml");
             sketchWorld.LoadSketchWorld(load);

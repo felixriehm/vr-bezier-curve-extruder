@@ -11,9 +11,9 @@ namespace BezierCurveExtrusion.Strategy
             return BezierCurveExtruder.DrawingCurveStrategy.Simple;
         }
         
-        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData)
+        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierCurveExtruderStateData bezierCurveExtruderStateData)
         {
-            return bezierSurfaceToolStateData.cpHandles[i].transform.position;
+            return bezierCurveExtruderStateData.cpHandles[i].transform.position;
         }
     }
 }

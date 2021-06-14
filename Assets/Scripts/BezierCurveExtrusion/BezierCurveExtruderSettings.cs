@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using VRSketchingGeometry;
 
 namespace BezierCurveExtrusion
 {
-    [CreateAssetMenu(fileName = "BezierSurfaceToolSettings", menuName = "ScriptableObjects/BezierSurfaceToolSettings", order = 2)]
-    public class BezierSurfaceToolSettings : ScriptableObject
+    [CreateAssetMenu(fileName = "BezierCurveExtruderSettings", menuName = "ScriptableObjects/BezierCurveExtruderSettings", order = 2)]
+    public class BezierCurveExtruderSettings : ScriptableObject
     {
+        public DefaultReferences Defaults;
         [Header("Left Controller")]
         [Range(0, 10)]
         public float bezierCurveLeftStartOffsetDistance = 0.5f;
@@ -19,13 +21,10 @@ namespace BezierCurveExtrusion
         public Vector3 bezierCurveRightStartRotation = new Vector3(0f,0f,0f);
         [Range(0, 10)]
         public float bezierCurveRightIntensity = 1f;
-        [Header("Bezier Surface")]
-        public GameObject BezierPatchSketchObjectPrefab;
-        public GameObject BezierSurfaceSketchObjectPrefab;
+        [Header("Bezier Patch")]
         [Range(0.002f, 4)]
         public float BezierPatchMinDistance = 0.02f;
         [Header("Bezier Curve")]
-        public GameObject BezierCurveSketchObjectPrefab;
         public GameObject BezierSurfaceToolIndicatorPrefab;
         public bool showIndicators = false;
     }

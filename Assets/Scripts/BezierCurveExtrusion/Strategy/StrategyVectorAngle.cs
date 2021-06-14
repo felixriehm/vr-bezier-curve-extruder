@@ -11,26 +11,26 @@ namespace BezierCurveExtrusion.Strategy
             return BezierCurveExtruder.DrawingCurveStrategy.VectorAngle;
         }
 
-        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierSurfaceToolStateData bezierSurfaceToolStateData)
+        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierCurveExtruderStateData bezierCurveExtruderStateData)
         {
             switch (i)
             {
                 case 1:
                 case 3:
-                    Vector3 leftUpVector = bezierSurfaceToolStateData.cpHandles[1].transform.position -
-                                           bezierSurfaceToolStateData.cpHandles[0].transform.position;
-                    Vector3 rightUpVector = bezierSurfaceToolStateData.cpHandles[3].transform.position -
-                                            bezierSurfaceToolStateData.cpHandles[2].transform.position;
+                    Vector3 leftUpVector = bezierCurveExtruderStateData.cpHandles[1].transform.position -
+                                           bezierCurveExtruderStateData.cpHandles[0].transform.position;
+                    Vector3 rightUpVector = bezierCurveExtruderStateData.cpHandles[3].transform.position -
+                                            bezierCurveExtruderStateData.cpHandles[2].transform.position;
                     float angle = Vector3.Angle(leftUpVector, rightUpVector);
                     //Debug.Log("Angle: " + angle);
                     float t = angle / 180;
                     //Debug.Log("t: " + t);
-                    Vector3 newCp = Vector3.Lerp(bezierSurfaceToolStateData.cpHandles[i].transform.position,
-                        bezierSurfaceToolStateData.cpHandles[i-1].transform.position, t);
-                    bezierSurfaceToolStateData.supplementaryCpHandles[(int)((i - 1) * 0.5)].transform.position = newCp;
+                    Vector3 newCp = Vector3.Lerp(bezierCurveExtruderStateData.cpHandles[i].transform.position,
+                        bezierCurveExtruderStateData.cpHandles[i-1].transform.position, t);
+                    bezierCurveExtruderStateData.supplementaryCpHandles[(int)((i - 1) * 0.5)].transform.position = newCp;
                     return newCp;
                 default:
-                    return bezierSurfaceToolStateData.cpHandles[i].transform.position;
+                    return bezierCurveExtruderStateData.cpHandles[i].transform.position;
             }
         }
     }

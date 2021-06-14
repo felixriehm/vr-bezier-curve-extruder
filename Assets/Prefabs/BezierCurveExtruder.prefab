@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3435226166496862316}
   - component: {fileID: 3879698918097754407}
   m_Layer: 0
-  m_Name: BezierSurfaceTool
+  m_Name: BezierCurveExtruder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466ede38ffdd45f7937c07d6e4eaf55c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BezierSurfaceToolSettings: {fileID: 11400000, guid: da2376ddb74cf0f4bb6509702f5861ce, type: 2}
+  BezierCurveExtruderSettings: {fileID: 11400000, guid: da2376ddb74cf0f4bb6509702f5861ce, type: 2}

@@ -5,7 +5,7 @@ using VRSketchingGeometry.SketchObjectManagement;
 
 namespace BezierCurveExtrusion.State
 {
-    internal class BezierSurfaceToolStateData
+    internal class BezierCurveExtruderStateData
     {
         public BezierCurveSketchObject BezierCurveSketchObject;
         public GameObject[] cpHandles = new GameObject[4];
@@ -15,7 +15,7 @@ namespace BezierCurveExtrusion.State
         public GameObject[] supplementaryCpHandles = new GameObject[2];
         public GameObject[] controllerHandles = new GameObject[2];
         public IDrawingCurveStrategy drawingCurveStrategy;
-        public UnityEvent<BezierCurveExtruder.BezierSurfaceToolState> OnStateChanged = new UnityEvent<BezierCurveExtruder.BezierSurfaceToolState>();
+        public UnityEvent<BezierCurveExtruder.BezierCurveExtruderState> OnStateChanged = new UnityEvent<BezierCurveExtruder.BezierCurveExtruderState>();
         public UnityEvent<BezierCurveExtruder.DrawingCurveStrategy> OnStrategyChanged = new UnityEvent<BezierCurveExtruder.DrawingCurveStrategy>();
     }
 }
