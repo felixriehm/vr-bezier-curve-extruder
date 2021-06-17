@@ -12,7 +12,7 @@ namespace BezierCurveExtrusion.State
             BezierCurveExtruderStateData.OnStateChanged.Invoke(BezierCurveExtruder.BezierCurveExtruderState.Idle);
         }
 
-        internal override void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
+        internal override void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.InteractionMethod interactionMethod = BezierCurveExtruder.InteractionMethod.Simple)
         {
             // init arrays for the later for loop
             Transform[] controllerOrigins = new Transform[2];
@@ -85,14 +85,14 @@ namespace BezierCurveExtrusion.State
             BezierCurveExtruderStateData.BezierCurveSketchObject.SetInterpolationSteps(steps);
 
             // set drawing curve strategy
-            SetDrawingCurveStrategy(drawingCurveStrategy);
+            SetInteractionMethod(interactionMethod);
             
             // get control points for the bezier curve
             List<Vector3> controlPoints = new List<Vector3>();
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(0, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(1, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(3, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(2, BezierCurveExtruderStateData));
 
             // set control points of bezier curve and draw it
             BezierCurveExtruderStateData.BezierCurveSketchObject.SetControlPoints(controlPoints);

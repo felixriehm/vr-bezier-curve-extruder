@@ -13,7 +13,7 @@ namespace BezierCurveExtrusion.State
             BezierCurveExtruderStateData.OnStateChanged.Invoke(BezierCurveExtruder.BezierCurveExtruderState.CurveExtrusion);
         }
         
-        internal override void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
+        internal override void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.InteractionMethod interactionMethod = BezierCurveExtruder.InteractionMethod.Simple)
         {
             Debug.Log("Can not execute method 'StartTool()': Tool has already started.");
         }
@@ -52,7 +52,7 @@ namespace BezierCurveExtrusion.State
                 // save current hold bezier curve so it can be used later to continuously draw the temporary bezier patch
                 for (int i = 0; i < BezierCurveExtruderStateData.cpHandles.Length; i++)
                 {
-                    BezierCurveExtruderStateData.prevCpHandles[i] = BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(i, BezierCurveExtruderStateData);
+                    BezierCurveExtruderStateData.prevCpHandles[i] = BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(i, BezierCurveExtruderStateData);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace BezierCurveExtrusion.State
         {
             for (int i = 0; i < BezierCurveExtruderStateData.prevCpHandles.Length; i++)
             {
-                if ((BezierCurveExtruderStateData.prevCpHandles[i] - BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(i, BezierCurveExtruderStateData)).magnitude > BezierCurveExtruderSettings.BezierPatchMinDistance)
+                if ((BezierCurveExtruderStateData.prevCpHandles[i] - BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(i, BezierCurveExtruderStateData)).magnitude > BezierCurveExtruderSettings.BezierPatchMinDistance)
                 {
                     return true;
                 }
@@ -89,10 +89,10 @@ namespace BezierCurveExtrusion.State
         
         private bool AllCounterpartVerticesAreEqual()
         {
-            return BezierCurveExtruderStateData.prevCpHandles[0] == BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierCurveExtruderStateData) &&
-                   BezierCurveExtruderStateData.prevCpHandles[1] == BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierCurveExtruderStateData) &&
-                   BezierCurveExtruderStateData.prevCpHandles[2] == BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierCurveExtruderStateData) &&
-                   BezierCurveExtruderStateData.prevCpHandles[3] == BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierCurveExtruderStateData);
+            return BezierCurveExtruderStateData.prevCpHandles[0] == BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(0, BezierCurveExtruderStateData) &&
+                   BezierCurveExtruderStateData.prevCpHandles[1] == BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(1, BezierCurveExtruderStateData) &&
+                   BezierCurveExtruderStateData.prevCpHandles[2] == BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(2, BezierCurveExtruderStateData) &&
+                   BezierCurveExtruderStateData.prevCpHandles[3] == BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(3, BezierCurveExtruderStateData);
         }
         
         private List<Vector3> GetTmpBezierPatchCps()
@@ -102,10 +102,10 @@ namespace BezierCurveExtrusion.State
             controlPoints.Add(BezierCurveExtruderStateData.prevCpHandles[1]);
             controlPoints.Add(BezierCurveExtruderStateData.prevCpHandles[3]);
             controlPoints.Add(BezierCurveExtruderStateData.prevCpHandles[2]);
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(0, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(1, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(3, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(2, BezierCurveExtruderStateData));
             return controlPoints;
         }
         

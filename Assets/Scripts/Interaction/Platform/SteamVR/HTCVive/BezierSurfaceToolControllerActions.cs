@@ -12,7 +12,7 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     [SerializeField]
     private UnityEvent<BezierCurveExtruder.BezierCurveExtruderState> OnStateChanged;
     [SerializeField]
-    private UnityEvent<BezierCurveExtruder.DrawingCurveStrategy> OnStrategyChanged;
+    private UnityEvent<BezierCurveExtruder.InteractionMethod> OnStrategyChanged;
     [SerializeField]
     private UnityEvent drawSurfaceClick;
     [SerializeField]
@@ -33,10 +33,10 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     public SteamVR_ActionSet bezierSurfaceToolActionSet;
     public DefaultReferences Defaults;
     private BezierCurveExtruder bezierCurveExtruder;
-    private BezierCurveExtruder.DrawingCurveStrategy[] _curveStrategies = new BezierCurveExtruder.DrawingCurveStrategy[4];
+    private BezierCurveExtruder.InteractionMethod[] _curveStrategies = new BezierCurveExtruder.InteractionMethod[4];
     private int _strategyCounter;
     private SketchWorld sketchWorld;
-    private BezierCurveExtruder.DrawingCurveStrategy toolStartCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple;
+    private BezierCurveExtruder.InteractionMethod toolStartCurveStrategy = BezierCurveExtruder.InteractionMethod.Simple;
 
     private void Start()
     {
@@ -71,10 +71,10 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         bezierCurveIntensity.AddOnChangeListener(OnBezierCurveIntensityChangeAction, rightHandType);
 
         _strategyCounter = 4;
-        _curveStrategies[0] = BezierCurveExtruder.DrawingCurveStrategy.Simple;
-        _curveStrategies[1] = BezierCurveExtruder.DrawingCurveStrategy.VectorAngle;
-        _curveStrategies[2] = BezierCurveExtruder.DrawingCurveStrategy.RotationAngle;
-        _curveStrategies[3] = BezierCurveExtruder.DrawingCurveStrategy.Distance;
+        _curveStrategies[0] = BezierCurveExtruder.InteractionMethod.Simple;
+        _curveStrategies[1] = BezierCurveExtruder.InteractionMethod.VectorAngle;
+        _curveStrategies[2] = BezierCurveExtruder.InteractionMethod.RotationAngle;
+        _curveStrategies[3] = BezierCurveExtruder.InteractionMethod.Distance;
         
         Teleport.instance.CancelTeleportHint();
     }
@@ -137,14 +137,14 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
     {
         //Debug.Log("BezierSurfaceTool curve strategy changed");
         _strategyCounter++;
-        bezierCurveExtruder.SetDrawingCurveStrategy(_curveStrategies[_strategyCounter%(_curveStrategies.Length)]);
+        bezierCurveExtruder.SetInteractionMethod(_curveStrategies[_strategyCounter%(_curveStrategies.Length)]);
     }
     
     private void OnLastCurveStrategyActionStateDown(SteamVR_Action_Boolean fromaction, SteamVR_Input_Sources fromsource)
     {
         //Debug.Log("BezierSurfaceTool curve strategy changed");
         _strategyCounter--;
-        bezierCurveExtruder.SetDrawingCurveStrategy(_curveStrategies[_strategyCounter%(_curveStrategies.Length)]);
+        bezierCurveExtruder.SetInteractionMethod(_curveStrategies[_strategyCounter%(_curveStrategies.Length)]);
         if (_strategyCounter <= 0)
         {
             _strategyCounter = 4;
@@ -208,8 +208,8 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         return sketchWorld;
     }
 
-    public void SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy)
+    public void SetStartInteractionMethod(BezierCurveExtruder.InteractionMethod interactionMethod)
     {
-        toolStartCurveStrategy = drawingCurveStrategy;
+        toolStartCurveStrategy = interactionMethod;
     }
 }

@@ -117,15 +117,15 @@ public class UIUsabilityTest : MonoBehaviour
         {
             case 0:
                 variation = "A";
-                controllerScript.SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy.Simple);
+                controllerScript.SetStartInteractionMethod(BezierCurveExtruder.InteractionMethod.Simple);
                 break;
             case 1:
                 variation = "B";
-                controllerScript.SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy.VectorAngle);
+                controllerScript.SetStartInteractionMethod(BezierCurveExtruder.InteractionMethod.VectorAngle);
                 break;
             case 2:
                 variation = "C";
-                controllerScript.SetToolStartCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy.Distance);
+                controllerScript.SetStartInteractionMethod(BezierCurveExtruder.InteractionMethod.Distance);
                 break;
         }
         

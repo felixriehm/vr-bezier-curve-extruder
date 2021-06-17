@@ -30,7 +30,7 @@ namespace BezierCurveExtrusion
             Right
         }
         
-        public enum DrawingCurveStrategy
+        public enum InteractionMethod
         {
             Simple,
             VectorAngle,
@@ -43,9 +43,9 @@ namespace BezierCurveExtrusion
             CurrentBezierCurveExtruderState = new StateIdle(this, BezierCurveExtruderSettings, new BezierCurveExtruderStateData());
         }
 
-        public void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
+        public void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.InteractionMethod interactionMethod = BezierCurveExtruder.InteractionMethod.Simple)
         {
-            CurrentBezierCurveExtruderState.Init(leftControllerOrigin, rightControllerOrigin, steps ,diameter, drawingCurveStrategy);
+            CurrentBezierCurveExtruderState.Init(leftControllerOrigin, rightControllerOrigin, steps ,diameter, interactionMethod);
         }
 
         private void Update()
@@ -83,9 +83,9 @@ namespace BezierCurveExtrusion
             CurrentBezierCurveExtruderState.ChangeCurveIntensity(controller, amount);
         }
 
-        public void SetDrawingCurveStrategy(DrawingCurveStrategy strategy)
+        public void SetInteractionMethod(InteractionMethod strategy)
         {
-            CurrentBezierCurveExtruderState.SetDrawingCurveStrategy(strategy);
+            CurrentBezierCurveExtruderState.SetInteractionMethod(strategy);
         }
         
         public BezierCurveExtruderState GetCurrentState()
@@ -98,12 +98,12 @@ namespace BezierCurveExtrusion
             return CurrentBezierCurveExtruderState.GetOnStateChangedEvent();
         }
         
-        public UnityEvent<DrawingCurveStrategy> GetOnStrategyChangedEvent()
+        public UnityEvent<InteractionMethod> GetOnStrategyChangedEvent()
         {
             return CurrentBezierCurveExtruderState.GetOnStrategyChangedEvent();
         }
         
-        public DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
+        public InteractionMethod GetCurrentDrawingCurveStrategy()
         {
             return CurrentBezierCurveExtruderState.GetCurrentDrawingCurveStrategy();
         }

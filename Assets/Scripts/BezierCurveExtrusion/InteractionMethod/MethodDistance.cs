@@ -1,16 +1,16 @@
 ﻿using BezierCurveExtrusion.State;
 using UnityEngine;
 
-namespace BezierCurveExtrusion.Strategy
+namespace BezierCurveExtrusion.InteractionMethod
 {
-    public class StrategyDistance : IDrawingCurveStrategy
+    public class MethodDistance : IInteractionMethod
     {
-        BezierCurveExtruder.DrawingCurveStrategy IDrawingCurveStrategy.GetCurrentStrategy()
+        BezierCurveExtruder.InteractionMethod IInteractionMethod.GetCurrentInteractionMethod()
         {
-            return BezierCurveExtruder.DrawingCurveStrategy.Distance;
+            return BezierCurveExtruder.InteractionMethod.Distance;
         }
         
-        Vector3 IDrawingCurveStrategy.CalculateControlPoint(int i, BezierCurveExtruderStateData bezierCurveExtruderStateData)
+        Vector3 IInteractionMethod.CalculateControlPoint(int i, BezierCurveExtruderStateData bezierCurveExtruderStateData)
         {
             switch (i)
             {

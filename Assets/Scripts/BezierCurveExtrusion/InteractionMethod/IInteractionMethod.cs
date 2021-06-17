@@ -1,11 +1,11 @@
 ﻿using BezierCurveExtrusion.State;
 using UnityEngine;
 
-namespace BezierCurveExtrusion.Strategy
+namespace BezierCurveExtrusion.InteractionMethod
 {
-    public interface IDrawingCurveStrategy
+    public interface IInteractionMethod
     {
-        internal BezierCurveExtruder.DrawingCurveStrategy GetCurrentStrategy();
+        internal BezierCurveExtruder.InteractionMethod GetCurrentInteractionMethod();
         internal Vector3 CalculateControlPoint(int i, BezierCurveExtruderStateData bezierCurveExtruderStateData);
     }
 }

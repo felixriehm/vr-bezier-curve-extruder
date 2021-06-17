@@ -1,4 +1,4 @@
-﻿using BezierCurveExtrusion.Strategy;
+﻿using BezierCurveExtrusion.InteractionMethod;
 using UnityEngine;
 using UnityEngine.Events;
 using VRSketchingGeometry.SketchObjectManagement;
@@ -18,7 +18,7 @@ namespace BezierCurveExtrusion.State
             BezierCurveExtruderStateData = stateData;
         }
         
-        internal abstract void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple);
+        internal abstract void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.InteractionMethod interactionMethod = BezierCurveExtruder.InteractionMethod.Simple);
         internal abstract void Reset();
         internal abstract void StartExtrusion();
         internal abstract ExtrudedBezierCurveSketchObject StopExtrusion();
@@ -57,18 +57,18 @@ namespace BezierCurveExtrusion.State
         {
             return BezierCurveExtruderStateData.OnStateChanged;
         }
-        protected internal UnityEvent<BezierCurveExtruder.DrawingCurveStrategy> GetOnStrategyChangedEvent()
+        protected internal UnityEvent<BezierCurveExtruder.InteractionMethod> GetOnStrategyChangedEvent()
         {
             return BezierCurveExtruderStateData.OnStrategyChanged;
         }
-        protected internal void SetDrawingCurveStrategy(BezierCurveExtruder.DrawingCurveStrategy strategy)
+        protected internal void SetInteractionMethod(BezierCurveExtruder.InteractionMethod strategy)
         {
             switch (strategy)
             {
-                case BezierCurveExtruder.DrawingCurveStrategy.Simple:
+                case BezierCurveExtruder.InteractionMethod.Simple:
                     // change strategy
-                    BezierCurveExtruderStateData.drawingCurveStrategy = new StrategySimple();
-                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.Simple);
+                    BezierCurveExtruderStateData.InteractionMethod = new MethodSimple();
+                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.InteractionMethod.Simple);
                     
                     // change visibility of supplementary handles
                     foreach (var supplementaryCpHandle in BezierCurveExtruderStateData.supplementaryCpHandles)
@@ -83,33 +83,33 @@ namespace BezierCurveExtrusion.State
                     BezierCurveExtruderStateData.cpHandles[1].transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1,0,0);
                     BezierCurveExtruderStateData.cpHandles[3].transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(1,0,0);
                     break;
-                case BezierCurveExtruder.DrawingCurveStrategy.VectorAngle:
+                case BezierCurveExtruder.InteractionMethod.VectorAngle:
                     // change strategy
-                    BezierCurveExtruderStateData.drawingCurveStrategy = new StrategyVectorAngle();
-                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.VectorAngle);
+                    BezierCurveExtruderStateData.InteractionMethod = new MethodVectorAngle();
+                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.InteractionMethod.VectorAngle);
 
                     ChangeVisibilityAndColorOfHandles();
                     break;
-                case BezierCurveExtruder.DrawingCurveStrategy.RotationAngle:
+                case BezierCurveExtruder.InteractionMethod.RotationAngle:
                     // change strategy
-                    BezierCurveExtruderStateData.drawingCurveStrategy = new StrategyRotationAngle();
-                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.RotationAngle);
+                    BezierCurveExtruderStateData.InteractionMethod = new MethodRotationAngle();
+                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.InteractionMethod.RotationAngle);
 
                     ChangeVisibilityAndColorOfHandles();
                     break;
-                case BezierCurveExtruder.DrawingCurveStrategy.Distance:
+                case BezierCurveExtruder.InteractionMethod.Distance:
                     // change strategy
-                    BezierCurveExtruderStateData.drawingCurveStrategy = new StrategyDistance();
-                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.DrawingCurveStrategy.Distance);
+                    BezierCurveExtruderStateData.InteractionMethod = new MethodDistance();
+                    BezierCurveExtruderStateData.OnStrategyChanged.Invoke(BezierCurveExtruder.InteractionMethod.Distance);
 
                     ChangeVisibilityAndColorOfHandles();
                     break;
             }
         }
 
-        protected internal BezierCurveExtruder.DrawingCurveStrategy GetCurrentDrawingCurveStrategy()
+        protected internal BezierCurveExtruder.InteractionMethod GetCurrentDrawingCurveStrategy()
         {
-            return BezierCurveExtruderStateData.drawingCurveStrategy.GetCurrentStrategy();
+            return BezierCurveExtruderStateData.InteractionMethod.GetCurrentInteractionMethod();
         }
 
         private void ChangeVisibilityAndColorOfHandles()

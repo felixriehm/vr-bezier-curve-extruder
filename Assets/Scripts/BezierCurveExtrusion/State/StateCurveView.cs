@@ -16,10 +16,10 @@ namespace BezierCurveExtrusion.State
         internal override void Update()
         {
             List<Vector3> controlPoints = new List<Vector3>();
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(0, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(1, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(3, BezierCurveExtruderStateData));
-            controlPoints.Add(BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(2, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(0, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(1, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(3, BezierCurveExtruderStateData));
+            controlPoints.Add(BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(2, BezierCurveExtruderStateData));
             BezierCurveExtruderStateData.BezierCurveSketchObject.SetControlPoints(controlPoints);
         }
 
@@ -28,7 +28,7 @@ namespace BezierCurveExtrusion.State
             return BezierCurveExtruder.BezierCurveExtruderState.CurveView;
         }
 
-        internal override void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.DrawingCurveStrategy drawingCurveStrategy = BezierCurveExtruder.DrawingCurveStrategy.Simple)
+        internal override void Init(Transform leftControllerOrigin, Transform rightControllerOrigin, int steps = 20, float diameter = 0.1f, BezierCurveExtruder.InteractionMethod interactionMethod = BezierCurveExtruder.InteractionMethod.Simple)
         {
             Debug.Log("Can not execute method 'StartTool()': Tool has already started.");
         }
@@ -42,7 +42,7 @@ namespace BezierCurveExtrusion.State
             BezierCurveExtruderStateData.prevCpHandles = new Vector3[4];
             for (int i = 0; i < BezierCurveExtruderStateData.cpHandles.Length; i++)
             {
-                BezierCurveExtruderStateData.prevCpHandles[i] = BezierCurveExtruderStateData.drawingCurveStrategy.CalculateControlPoint(i, BezierCurveExtruderStateData);
+                BezierCurveExtruderStateData.prevCpHandles[i] = BezierCurveExtruderStateData.InteractionMethod.CalculateControlPoint(i, BezierCurveExtruderStateData);
             }
             
             // init temporary bezier patch so it can be continuously be drawn later and added to the bezier surface
