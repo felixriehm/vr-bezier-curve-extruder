@@ -51,6 +51,8 @@ namespace BezierCurveExtrusion.State
                     childRenderer.enabled = show;
                 }
             }
+
+            SetInteractionMethod(BezierCurveExtruderStateData.InteractionMethod.GetCurrentInteractionMethod());
         }
 
         protected internal UnityEvent<BezierCurveExtruder.BezierCurveExtruderState> GetOnStateChangedEvent()

@@ -58,8 +58,8 @@ public class BezierSurfaceToolControllerActions : MonoBehaviour
         //saveSketchWorld.AddOnStateDownListener(OnSaveSketchWorldActionStateDown, leftHandType);
         //loadSketchWorld.AddOnStateDownListener(OnLoadSketchWorldActionStateDown, rightHandType);
         
-        //lastCurveStrategy.AddOnStateDownListener(OnLastCurveStrategyActionStateDown, leftHandType);
-        //nextCurveStrategy.AddOnStateDownListener(OnNextCurveStrategyActionStateDown, rightHandType);
+        lastCurveStrategy.AddOnStateDownListener(OnLastCurveStrategyActionStateDown, leftHandType);
+        nextCurveStrategy.AddOnStateDownListener(OnNextCurveStrategyActionStateDown, rightHandType);
         
         drawBezierSurface.AddOnStateDownListener(OnDrawBezierSurfaceStateDownAction, leftHandType);
         drawBezierSurface.AddOnStateDownListener(OnDrawBezierSurfaceStateDownAction, rightHandType);
